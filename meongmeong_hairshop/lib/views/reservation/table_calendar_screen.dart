@@ -2,54 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class ReservationScreen extends StatelessWidget {
-  const ReservationScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('예약화면'), backgroundColor: Colors.deepPurple),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-              Text('샵이름'),
-              Text('영업시간'),
-              Text('주소'),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 400,
-                  child: TableCalendarScreen(),
-                ),
-              ),
-                
-              Text('시간'),
-              Text('디자이너'),
-              Text("시술 메뉴를 선택해주세요."),
-              Text('컷, 펌, 염색, 클리닉'),
-              Text('시술 받을 강아지를 선택해주세요.'),
-              SizedBox(height: 30,),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    FloatingActionButton(onPressed: () {
-                      
-                    }, child: Text('예약하기')),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class TableCalendarScreen extends StatefulWidget {
   const TableCalendarScreen({super.key});
 
@@ -103,9 +55,9 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                   width: 40,
                   height: 40,
                   decoration: const BoxDecoration(
-
                     color: Colors.green, 
                     shape: BoxShape.rectangle, 
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
                   alignment: Alignment.center,
                   child: Text(
