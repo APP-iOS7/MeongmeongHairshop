@@ -1,7 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:meongmeong_hairshop/views/signup_screen.dart';
+import 'dart:async';
+import 'dart:developer';
 
-void main() {
+import 'package:flutter/material.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
+
+import 'viewmodels/search_place.dart';
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await NaverMapSdk.instance.initialize(
+      clientId: 'yd79jdvpdg', // 네이버 지도 API 클라이언트 ID
+      onAuthFailed: (ex) => print("********* authFailed $ex *********"));
+  // searchPlace('애견미용');
   runApp(const MyApp());
 }
 
@@ -30,28 +40,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  late NaverMapController _mapController;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: SignupScreen()
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+    return MaterialApp(
+      home: Scaffold(
+        body: NaverMap(
+          options: NaverMapViewOptions(
+            initialCameraPosition: NCameraPosition(
+              target: NLatLng(37.5665, 126.9780),
+              zoom: 15,
+            ),
+          ),
+        ),
       ),
     );
   }

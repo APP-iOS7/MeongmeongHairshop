@@ -42,5 +42,6 @@ class SignupViewModel with ChangeNotifier {
 
   Future<void> signup() async {
     // ...
+    
   }
 }
