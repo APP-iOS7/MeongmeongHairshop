@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "754793882218",
+    "project_id": "meongmeonghairshop",
+    "storage_bucket": "meongmeonghairshop.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:754793882218:android:bc4384d8c03edeb8a7a013",
+        "android_client_info": {
+          "package_name": "com.example.meongmeong_hairshop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBn0MuHizrt6RNwduFmUAVEmJ0bWtz5IJg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
