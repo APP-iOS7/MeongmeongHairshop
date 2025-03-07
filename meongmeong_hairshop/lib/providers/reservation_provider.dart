@@ -11,6 +11,8 @@ class ReservationProvider with ChangeNotifier {
   bool isServicesSelected = false;
   bool isPetSelected = false;
 
+  int totalFee = 0;
+
   Reservation get reservation => _reservation;
 
   void updateName(String name) {
@@ -85,6 +87,11 @@ class ReservationProvider with ChangeNotifier {
 
   void setPetSelected() {
     isPetSelected = !isPetSelected;
+    notifyListeners();
+  }
+
+  void setTotalFee(int totalFee) {
+    this.totalFee = totalFee;
     notifyListeners();
   }
 }

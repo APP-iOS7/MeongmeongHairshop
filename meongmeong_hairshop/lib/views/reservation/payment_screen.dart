@@ -4,10 +4,18 @@ import 'package:meongmeong_hairshop/providers/reservation_provider.dart';
 import 'package:provider/provider.dart';
 
 class PaymentScreen extends StatelessWidget {
-  const PaymentScreen({super.key});
+  
+  PaymentScreen({super.key});
+
+  List<String> services = ['컷', '펌', '염색', '클리닉'];
+  // 컷, 펌, 염색, 클리닉 가격
+  List<int> prices = [50000,70000,100000,70000];
+  // 추가요금(직책에 따라)
+  int additionalFee = 30000;
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('결제 화면'),
@@ -15,6 +23,22 @@ class PaymentScreen extends StatelessWidget {
         ),
       body: Consumer<ReservationProvider>(
         builder: (context, provider, child) {
+          
+          // 시술 메뉴 가격 포맷
+          String resultText = '';  
+          
+          int totalFee = 0;
+          for (int i = 0; i < services.length; i++) {
+            if (provider.reservation.services.contains(services[i])) {
+              if (services[i].length < 3) {
+                resultText += services[i] + '   '*(3-services[i].length);
+              } else {
+                resultText += services[i];
+              }
+                resultText += '                                         ${prices[i]}원\n';                  
+                totalFee += prices[i];
+             }
+          }
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
             child: Column(
@@ -29,7 +53,10 @@ class PaymentScreen extends StatelessWidget {
                 SizedBox(height: 20),
                 
                 Text('시술 메뉴', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                Text('${provider.reservation.services}', style: TextStyle(fontSize: 15, color: Colors.grey,),),
+                Text(resultText.trim(), style: TextStyle(fontSize: 15, color: Colors.grey,), textAlign: TextAlign.left,),
+                Text('-'*40, style: TextStyle(fontSize: 15, color: Colors.grey,), textAlign: TextAlign.left,),
+                Text('총금액                                         $totalFee원', style: TextStyle(fontSize: 15,),),
+                
                 SizedBox(height: 20),
                 
                 // user 정보 가져와야함.
@@ -37,13 +64,18 @@ class PaymentScreen extends StatelessWidget {
                 Text('박민우(${provider.reservation.petName})', style: TextStyle(fontSize: 15, color: Colors.grey,),),
                 SizedBox(height: 20),
                 
+                
+
                 Text('결제 수단', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                SizedBox(height: 300,),
+                // SizedBox(height: 300,),
                 Container(
                   width: double.infinity,
                   height: 70,
                   child: FloatingActionButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      provider.setTotalFee(totalFee);
+                      print('${provider.totalFee}');
+                    },
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.zero, 
                     ),

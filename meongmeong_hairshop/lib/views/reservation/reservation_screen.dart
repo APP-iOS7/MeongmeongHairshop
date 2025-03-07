@@ -91,11 +91,11 @@ class ReservationScreen extends StatelessWidget {
                         DogSelectionScreen(),
 
                         // bool 여부(테스트 시)
-                        Text(provider.isDateSelected.toString()),
-                        Text(provider.isReservedTimeSelected.toString()),
-                        Text(provider.isDesignerSelected.toString()),
-                        Text(provider.isServicesSelected.toString()),
-                        Text(provider.isPetSelected.toString()),
+                        // Text(provider.isDateSelected.toString()),
+                        // Text(provider.isReservedTimeSelected.toString()),
+                        // Text(provider.isDesignerSelected.toString()),
+                        // Text(provider.isServicesSelected.toString()),
+                        // Text(provider.isPetSelected.toString()),
                       ],
                     ),
                   ),
