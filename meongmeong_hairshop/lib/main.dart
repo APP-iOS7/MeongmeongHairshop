@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meongmeong_hairshop/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'routes.dart';
+import 'config/app_theme.dart';
 
 void main() {
   runApp(
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: buildLightTheme(),
       initialRoute: '/login',
       routes: appRoutes, // routes 파일에서 정의한 경로 사용
     );

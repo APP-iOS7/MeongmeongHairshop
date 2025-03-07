@@ -8,7 +8,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('로그인 화면')),
+      appBar: AppBar(title: Text('로그인')),
       body: Padding(
         padding: EdgeInsets.all(15),
         child: Column(
@@ -17,7 +17,7 @@ class LoginScreen extends StatelessWidget {
             Consumer<UserProvider>(
               builder: (context, userProvider, child) {
                 return TextField(
-                  decoration: InputDecoration(labelText: 'Email'),
+                  decoration: InputDecoration(labelText: '이메일'),
                   onChanged: (value) {
                     userProvider.updateEmail(value);
                   },
@@ -28,7 +28,7 @@ class LoginScreen extends StatelessWidget {
               builder: (context, userProvider, child) {
                 return TextField(
                   obscureText: true,
-                  decoration: InputDecoration(labelText: 'Password'),
+                  decoration: InputDecoration(labelText: '비밀번호'),
                   onChanged: (value) {
                     userProvider.updatePassword(value);
                   },
@@ -36,13 +36,19 @@ class LoginScreen extends StatelessWidget {
               },
             ),
             SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/success');
-              },
-              child: Text('로그인'),
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/success');
+                  },
+                  child: Text('로그인'),
+                ),
+              ),
             ),
-            ElevatedButton(
+            TextButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/signup');
               },
