@@ -58,7 +58,7 @@ class ReservationScreen extends StatelessWidget {
                         SizedBox(height: 20),
                   
                         // 날짜와 시간 
-                        Text('날짜와 시간을 선택해주세요.',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        Text('1. 날짜와 시간을 선택해주세요.',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                   
                         // 캘린더
@@ -77,20 +77,20 @@ class ReservationScreen extends StatelessWidget {
                         SizedBox(height: 10),
                   
                         // 디자이너 선택
-                        Text('디자이너를 선택해주세요.', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                        Text('2. 디자이너를 선택해주세요.', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                         DesignerScreen(),
                         SizedBox(height: 10),
                         
                         // 시술 선택
-                        Text('시술 메뉴를 선택해주세요.',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                        Text('3. 시술 메뉴를 선택해주세요.',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                         ServiceSelection(),
                         SizedBox(height: 10),
                   
                         // 시술 받을 강아지 선택
-                        Text('시술 받을 강아지를 선택해주세요.', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                        Text('4. 시술 받을 강아지를 선택해주세요.', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                         DogSelectionScreen(),
 
-                        // bool 여부
+                        // bool 여부(테스트 시)
                         Text(provider.isDateSelected.toString()),
                         Text(provider.isReservedTimeSelected.toString()),
                         Text(provider.isDesignerSelected.toString()),
@@ -104,12 +104,24 @@ class ReservationScreen extends StatelessWidget {
               Container(
                 width: double.infinity,
                 height: 70,
-                // 조건을 만족할 때만 활성화
+                // 조건을 만족할 때만 버튼 활성화
                 child: FloatingActionButton(onPressed: provider.isDateSelected && provider.isReservedTimeSelected && provider.isDesignerSelected && provider.isServicesSelected && provider.isPetSelected ? () {
                   provider.updateName(name);
                   provider.updateOpenTime(openTime);
                   provider.updateCloseTime(closeTime);
                   provider.updateAddress(address);       
+                  print('===예약 정보==='); 
+                  print('가게 이름: $name');
+                  print('오픈 시간: $openTime');
+                  print('닫는 시간: $closeTime');
+                  print('가게 주소: $address');
+                  print('예약 날짜: ${provider.reservation.date}');
+                  print('예약 시간: ${provider.reservation.reservedTime}');
+                  print('디자이너: ${provider.reservation.designer}');
+                  print('시술 종류: ${provider.reservation.services}');
+                  print('시술받을 강아지: ${provider.reservation.petName}');
+                  Navigator.pushNamed(context, '/payment');
+          
                 } : null,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.zero, 

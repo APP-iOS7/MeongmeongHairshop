@@ -10,8 +10,8 @@ class DesignerScreen extends StatefulWidget {
 }
 
 class _DesignerScreenState extends State<DesignerScreen> {
-  List<String> designers = ['김하준', '박서윤', '이도현', '정민수'];
-  List<String> positions = ['디자이너', '디자이너', '실장', '원장'];
+  List<String> designers = ['김하준', '박민우', '박서윤', '이도현', '정민수'];
+  List<String> positions = ['디자이너', '디자이너', '디자이너', '실장', '원장'];
   int? selectedIndex; // 선택된 디자이너의 인덱스
 
   @override

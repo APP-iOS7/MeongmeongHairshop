@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meongmeong_hairshop/views/reservation/payment_screen.dart';
 import 'views/login_screen.dart';
 import 'views/reservation/reservation_screen.dart';
 import 'views/signup_screen.dart';
@@ -8,5 +9,6 @@ Map<String, Widget Function(BuildContext)> appRoutes = {
   '/login': (context) => LoginScreen(),
   '/signup': (context) => SignupScreen(),
   '/reservation': (context) => ReservationScreen(),
+  '/payment': (context) => PaymentScreen(),
   // '/success': (context) => ShopListScreen(),
 };
