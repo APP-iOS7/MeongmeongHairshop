@@ -4,19 +4,40 @@ import 'package:meongmeong_hairshop/models/reservation.dart';
 
 class ReservationProvider with ChangeNotifier {
   Reservation _reservation = Reservation(name: '', address: '', openTime: TimeOfDay.now(), closeTime: TimeOfDay.now(), date: DateTime.now(), reservedTime: '', designer: '', services: {}, petName: '');
+  // getter
+  Reservation get reservation => _reservation;
   
-  bool isDateSelected = false;
-  bool isReservedTimeSelected = false;
-  bool isDesignerSelected = false;
-  bool isServicesSelected = false;
-  bool isPetSelected = false;
+  // 버튼 클릭시 상태 저장
+  bool _isDateSelected = false;
+  bool _isReservedTimeSelected = false;
+  bool _isDesignerSelected = false;
+  bool _isServicesSelected = false;
+  bool _isPetSelected = false;
+
+  // getter
+  bool get isDateSelected => _isDateSelected;
+  bool get isReservedTimeSelected => _isReservedTimeSelected;
+  bool get isDesignerSelected => _isDesignerSelected;
+  bool get isServicesSelected => _isServicesSelected; 
+  bool get isPetSelected => _isPetSelected;
+
+  // 시술 메뉴 종류
+  List<String> _services = ['스페셜컷','목욕 + 위생미용(소)','목욕 + 위생미용(중)' , '목욕 + 위생미용(대)','목욕(소)', '목욕(중)', '목욕(대)'];
+  // 시술 가격
+  List<int> _prices = [150000,50000,100000,150000,20000,30000,40000];
+  // getter
+  List<String> get services => _services;
+  List<int> get prices => _prices;
 
   // 시술 총 금액
-  int totalFee = 0;
+  int _totalFee = 0;
   // 디자이너 직책
-  String position = '';
+  String _position = '';
+  // getter
+  int get totalFee => _totalFee;
+  String get position => _position;
 
-  Reservation get reservation => _reservation;
+  
 
   void updateName(String name) {
     _reservation.name = name;
@@ -69,37 +90,37 @@ class ReservationProvider with ChangeNotifier {
   }
 
   void setDateSelected() {
-    isDateSelected = true;
+    _isDateSelected = true;
     notifyListeners();
   }
 
   void setReservedTimeSelected() {
-    isReservedTimeSelected = !isReservedTimeSelected;
+    _isReservedTimeSelected = !_isReservedTimeSelected;
     notifyListeners();
   }
 
   void setDesignerSelected() {
-    isDesignerSelected = true;
+    _isDesignerSelected = true;
     notifyListeners();
   }
 
   void setServicesSelected() {
-    isServicesSelected = !isServicesSelected;
+    _isServicesSelected = !_isServicesSelected;
     notifyListeners();
   }
 
   void setPetSelected() {
-    isPetSelected = !isPetSelected;
+    _isPetSelected = !_isPetSelected;
     notifyListeners();
   }
 
   void setTotalFee(int totalFee) {
-    this.totalFee = totalFee;
+    _totalFee = totalFee;
     notifyListeners();
   }
 
   void setPosition(String position) {
-    this.position = position;
+    _position = position;
     notifyListeners();
   }
 }

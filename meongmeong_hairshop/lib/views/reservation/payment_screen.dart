@@ -7,9 +7,6 @@ class PaymentScreen extends StatelessWidget {
   
   PaymentScreen({super.key});
 
-  List<String> services = ['스페셜컷','목욕 + 위생미용(소)','목욕 + 위생미용(중)' , '목욕 + 위생미용(대)','목욕(소)', '목욕(중)', '목욕(대)'];
-  // 컷, 펌, 염색, 클리닉 가격
-  List<int> prices = [150000,50000,100000,150000,20000,30000,40000];
   // 추가요금(직책에 따라)
   int additionalFee = 0;
 
@@ -30,17 +27,17 @@ class PaymentScreen extends StatelessWidget {
           int totalFee = 0;
 
           // 정렬...
-          for (int i = 0; i < services.length; i++) {
-            if (provider.reservation.services.contains(services[i])) {
-              if (services[i].length < 10) {
-                resultText += services[i];
-                resultText += '                                      ${prices[i]}원\n';
+          for (int i = 0; i < provider.services.length; i++) {
+            if (provider.reservation.services.contains(provider.services[i])) {
+              if (provider.services[i].length < 10) {
+                resultText += provider.services[i];
+                resultText += '                                      ${provider.prices[i]}원\n';
               } else {
-                resultText += services[i];
-                resultText += '                           ${prices[i]}원\n';
+                resultText += provider.services[i];
+                resultText += '                      ${provider.prices[i]}원\n';
               }                  
 
-                totalFee += prices[i];
+                totalFee += provider.prices[i];
              }
           }
           // 직급에 따라 추가 비용 발생 

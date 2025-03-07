@@ -8,7 +8,7 @@ class ServiceSelection extends StatefulWidget {
 }
 
 class _ServiceSelectionState extends State<ServiceSelection> {
-  List<String> services = ['스페셜컷','목욕 + 위생미용(소)','목욕 + 위생미용(중)' , '목욕 + 위생미용(대)','목욕(소)', '목욕(중)', '목욕(대)'];
+  // List<String> services = ['스페셜컷','목욕 + 위생미용(소)','목욕 + 위생미용(중)' , '목욕 + 위생미용(대)','목욕(소)', '목욕(중)', '목욕(대)'];
   Set<String> selectedServices = {}; // 선택된 서비스 저장 (여러 개 선택 가능)
 
   @override
@@ -20,21 +20,21 @@ class _ServiceSelectionState extends State<ServiceSelection> {
           child: Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: List.generate(services.length, (index) {
-                bool isSelected = selectedServices.contains(services[index]);
+              children: List.generate(provider.services.length, (index) {
+                bool isSelected = selectedServices.contains(provider.services[index]);
           
                 return GestureDetector(
                   onTap: () {
                     setState(() {
                       if (isSelected) {
-                        selectedServices.remove(services[index]); // 이미 선택된 경우 해제
-                        provider.updateDeleteServices(services[index]);
+                        selectedServices.remove(provider.services[index]); // 이미 선택된 경우 해제
+                        provider.updateDeleteServices(provider.services[index]);
                         if (selectedServices.isEmpty) {
                           provider.setServicesSelected();
                         }
                       } else {
-                        selectedServices.add(services[index]); // 선택되지 않은 경우 추가
-                        provider.updateAddServices(services[index]);
+                        selectedServices.add(provider.services[index]); // 선택되지 않은 경우 추가
+                        provider.updateAddServices(provider.services[index]);
                         if (!provider.isServicesSelected) {
                           provider.setServicesSelected();
                         }
@@ -49,7 +49,7 @@ class _ServiceSelectionState extends State<ServiceSelection> {
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: Colors.grey),
                     ),
-                    child: Text(services[index], style: TextStyle(fontSize: 16, color: isSelected ? Colors.white : Colors.black, // 선택된 버튼의 텍스트 색상 변경
+                    child: Text(provider.services[index], style: TextStyle(fontSize: 16, color: isSelected ? Colors.white : Colors.black, // 선택된 버튼의 텍스트 색상 변경
                       fontWeight: FontWeight.bold,
                       ),
                     ),
