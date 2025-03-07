@@ -1,10 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:meongmeong_hairshop/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'routes.dart';
 import 'config/app_theme.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (context) => UserProvider())],
