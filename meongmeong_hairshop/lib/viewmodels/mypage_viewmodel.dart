@@ -24,7 +24,7 @@ class MyPageViewModel with ChangeNotifier {
   Future<void> fetchReservations() async {
     // 예약 목록 가져오기
     _reservations = [
-      Reservation(date: DateTime.now(), time: TimeOfDay.now(), designer: '홍길동', services: ['컷', '목욕']),
+      Reservation(name: '', address: '', openTime: TimeOfDay.now(), closeTime: TimeOfDay.now(), date: DateTime.now(), reservedTime: '', designer: '', services: {}, petName: ''),
       // ...
     ];
     notifyListeners();

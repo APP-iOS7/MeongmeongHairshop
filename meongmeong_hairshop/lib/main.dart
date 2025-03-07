@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meongmeong_hairshop/providers/reservation_provider.dart';
 import 'package:meongmeong_hairshop/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'routes.dart';
@@ -9,7 +10,10 @@ void main()  async {
   await initializeDateFormatting();
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (context) => UserProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => ReservationProvider()),
+        ],
       child: const MyApp(),
     ),
   );
@@ -21,7 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/login',
+      initialRoute: '/reservation',
       routes: appRoutes, // routes 파일에서 정의한 경로 사용
     );
   }
