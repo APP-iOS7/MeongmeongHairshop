@@ -1,4 +1,3 @@
-// pet_info_screen.dart
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -32,29 +31,27 @@ class SignupPetScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            // 헤더 및 등록된 반려동물 수 표시
-            _buildPetHeader(petProvider),
+            Text(
+              '반려동물 정보',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
 
             SizedBox(height: 16),
 
-            // 등록된 반려동물 목록
             if (petProvider.pets.isNotEmpty) _buildPetList(petProvider),
 
             SizedBox(height: 16),
 
-            // 새 반려동물 정보 입력 폼
             _buildPetNameField(petProvider),
             _buildPetBreedField(petProvider),
             _buildPetAgeField(petProvider),
 
             SizedBox(height: 16),
 
-            // 반려동물 추가 버튼
             _buildAddPetButton(context, petProvider),
 
             SizedBox(height: 24),
 
-            // 회원가입 완료 버튼
             ElevatedButton(
               onPressed: () => _signUp(context, userProvider, petProvider),
               style: ElevatedButton.styleFrom(
@@ -65,18 +62,6 @@ class SignupPetScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildPetHeader(PetProvider petProvider) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          '반려동물 정보',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-      ],
     );
   }
 
