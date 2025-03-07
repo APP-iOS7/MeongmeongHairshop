@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:meongmeong_hairshop/providers/reservation_provider.dart';
+import 'package:meongmeong_hairshop/viewmodels/reservation_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class PaymentScreen extends StatelessWidget {
@@ -10,6 +11,8 @@ class PaymentScreen extends StatelessWidget {
   // 추가요금(직책에 따라)
   int additionalFee = 0;
 
+  // firestore 연결
+  // final FirestoreService _firestoreService = FirestoreService();
   @override
   Widget build(BuildContext context) {
     
@@ -84,6 +87,7 @@ class PaymentScreen extends StatelessWidget {
                     onPressed: () {
                       provider.setTotalFee(totalFee);
                       print('${provider.totalFee}');
+                      // _firestoreService.addReservation(provider.reservation.name, provider.reservation.openTime, provider.reservation.closeTime, provider.reservation.address, provider.reservation.date, provider.reservation.reservedTime, provider.reservation.designer, provider.reservation.services, provider.reservation.petName);
                     },
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.zero, 

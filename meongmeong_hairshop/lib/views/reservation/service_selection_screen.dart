@@ -8,7 +8,6 @@ class ServiceSelection extends StatefulWidget {
 }
 
 class _ServiceSelectionState extends State<ServiceSelection> {
-  // List<String> services = ['스페셜컷','목욕 + 위생미용(소)','목욕 + 위생미용(중)' , '목욕 + 위생미용(대)','목욕(소)', '목욕(중)', '목욕(대)'];
   Set<String> selectedServices = {}; // 선택된 서비스 저장 (여러 개 선택 가능)
 
   @override

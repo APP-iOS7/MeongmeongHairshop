@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:meongmeong_hairshop/providers/reservation_provider.dart';
 import 'package:meongmeong_hairshop/providers/user_provider.dart';

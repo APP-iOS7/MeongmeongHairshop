@@ -20,7 +20,7 @@ class Reservation {
   String designer;
   // 시술
   Set<String> services;
-  // 시술 받을 강아지
+  // 시술 받을 강아지(Pet 타입을 넣어야할듯)
   String petName;
 
   Reservation({
