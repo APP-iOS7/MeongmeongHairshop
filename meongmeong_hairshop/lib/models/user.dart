@@ -1,5 +1,3 @@
-import 'pet.dart';
-
 class User {
   String email;
   String username;
