@@ -51,9 +51,13 @@ class _TimeSlotScreenState extends State<TimeSlotScreen> {
                     selectedSlot = null; // 같은 시간 클릭하면 선택 해제
                     provider.setReservedTimeSelected();
                   } else {
+                    // 초기 선택시에만 선택 상태 변경
+                    if (selectedSlot == null) {
+                      provider.setReservedTimeSelected();
+                    }
+
                     selectedSlot = time; // 새로운 시간 선택
                     provider.updateReservedTime(time);
-                    provider.setReservedTimeSelected();
                   }
                 });
               },

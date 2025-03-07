@@ -35,9 +35,12 @@ class _DogSelectionScreenState extends State<DogSelectionScreen> {
                           selectedDog = null;
                           provider.setPetSelected();
                         } else { // 선택
+                          // 초기 선택시에만 선택 상태 변경
+                          if (selectedDog == null) {
+                            provider.setPetSelected();
+                          }
                           selectedDog = Dogs[index];
                           provider.updatePet(Dogs[index]);
-                          provider.setPetSelected();
                         }
                         
                       });
