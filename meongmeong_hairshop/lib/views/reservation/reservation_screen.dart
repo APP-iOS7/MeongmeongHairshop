@@ -23,7 +23,9 @@ class ReservationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('예약화면'), backgroundColor: Colors.green),
+      appBar: AppBar(
+        title: Text('예약화면'),
+        backgroundColor: Colors.green),
       body: Consumer<ReservationProvider>(
         builder: (context, provider, child) {
           return Column(
@@ -55,7 +57,7 @@ class ReservationScreen extends StatelessWidget {
                             Text(address),
                           ],
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: 30),
                   
                         // 날짜와 시간 
                         Text('1. 날짜와 시간을 선택해주세요.',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -74,17 +76,17 @@ class ReservationScreen extends StatelessWidget {
                           height: 150,
                           child: TimeSlotScreen(),
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 20),
                   
                         // 디자이너 선택
                         Text('2. 디자이너를 선택해주세요.', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                         DesignerScreen(),
-                        SizedBox(height: 10),
+                        SizedBox(height: 30),
                         
                         // 시술 선택
                         Text('3. 시술 메뉴를 선택해주세요.',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                         ServiceSelection(),
-                        SizedBox(height: 10),
+                        SizedBox(height: 30),
                   
                         // 시술 받을 강아지 선택
                         Text('4. 시술 받을 강아지를 선택해주세요.', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),

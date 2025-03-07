@@ -1,18 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import '../models/reservation.dart';
 
-class ReservationViewModel with ChangeNotifier {
-  Reservation? _reservation;
+class ReservationViewModel {
+  // firestore 연결
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  
 
-  Reservation? get reservation => _reservation;
-
-  void setReservation(Reservation reservation) {
-    _reservation = reservation;
-    notifyListeners();
-  }
-
-  // 예약 저장 로직 (예시)
-  Future<void> saveReservation() async {
-    // ...
-  }
 }

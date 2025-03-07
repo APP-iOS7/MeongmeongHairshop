@@ -11,7 +11,10 @@ class ReservationProvider with ChangeNotifier {
   bool isServicesSelected = false;
   bool isPetSelected = false;
 
+  // 시술 총 금액
   int totalFee = 0;
+  // 디자이너 직책
+  String position = '';
 
   Reservation get reservation => _reservation;
 
@@ -92,6 +95,11 @@ class ReservationProvider with ChangeNotifier {
 
   void setTotalFee(int totalFee) {
     this.totalFee = totalFee;
+    notifyListeners();
+  }
+
+  void setPosition(String position) {
+    this.position = position;
     notifyListeners();
   }
 }

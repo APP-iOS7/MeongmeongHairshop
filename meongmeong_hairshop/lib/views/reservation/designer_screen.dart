@@ -34,6 +34,7 @@ class _DesignerScreenState extends State<DesignerScreen> {
                       setState(() {
                         selectedIndex = index; // 선택된 디자이너 변경
                         provider.updateDesigner(designers[index]);
+                        provider.setPosition(positions[index]);
                       });
                     },
         

@@ -10,7 +10,7 @@ class DogSelectionScreen extends StatefulWidget {
 }
 
 class _DogSelectionScreenState extends State<DogSelectionScreen> {
-  List<String> Dogs = ['감자', '뽀삐', '코코', '몽이'];
+  List<String> Dogs = ['감자'];
   String? selectedDog;
 
   @override

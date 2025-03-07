@@ -7,11 +7,11 @@ class PaymentScreen extends StatelessWidget {
   
   PaymentScreen({super.key});
 
-  List<String> services = ['컷', '펌', '염색', '클리닉'];
+  List<String> services = ['스페셜컷','목욕 + 위생미용(소)','목욕 + 위생미용(중)' , '목욕 + 위생미용(대)','목욕(소)', '목욕(중)', '목욕(대)'];
   // 컷, 펌, 염색, 클리닉 가격
-  List<int> prices = [50000,70000,100000,70000];
+  List<int> prices = [150000,50000,100000,150000,20000,30000,40000];
   // 추가요금(직책에 따라)
-  int additionalFee = 30000;
+  int additionalFee = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -28,17 +28,30 @@ class PaymentScreen extends StatelessWidget {
           String resultText = '';  
           
           int totalFee = 0;
+
+          // 정렬...
           for (int i = 0; i < services.length; i++) {
             if (provider.reservation.services.contains(services[i])) {
-              if (services[i].length < 3) {
-                resultText += services[i] + '   '*(3-services[i].length);
+              if (services[i].length < 10) {
+                resultText += services[i];
+                resultText += '                                      ${prices[i]}원\n';
               } else {
                 resultText += services[i];
-              }
-                resultText += '                                         ${prices[i]}원\n';                  
+                resultText += '                           ${prices[i]}원\n';
+              }                  
+
                 totalFee += prices[i];
              }
           }
+          // 직급에 따라 추가 비용 발생 
+          if (provider.position == '원장') {
+                 additionalFee = 30000;
+            } else if (provider.position == '실장') {
+                additionalFee = 10000;
+            } else {
+                  additionalFee = 0;
+          }
+          totalFee += additionalFee;
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
             child: Column(
@@ -49,11 +62,12 @@ class PaymentScreen extends StatelessWidget {
                 SizedBox(height: 20),
             
                 Text('디자이너', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                Text(provider.reservation.designer, style: TextStyle(fontSize: 15, color: Colors.grey,),),
+                Text('${provider.reservation.designer} ${provider.position}', style: TextStyle(fontSize: 15, color: Colors.grey,),),
                 SizedBox(height: 20),
                 
                 Text('시술 메뉴', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                 Text(resultText.trim(), style: TextStyle(fontSize: 15, color: Colors.grey,), textAlign: TextAlign.left,),
+                Text('${provider.position}                                            ${additionalFee}원', style: TextStyle(fontSize: 15, color: Colors.grey,), textAlign: TextAlign.left,),
                 Text('-'*40, style: TextStyle(fontSize: 15, color: Colors.grey,), textAlign: TextAlign.left,),
                 Text('총금액                                         $totalFee원', style: TextStyle(fontSize: 15,),),
                 
@@ -64,8 +78,6 @@ class PaymentScreen extends StatelessWidget {
                 Text('박민우(${provider.reservation.petName})', style: TextStyle(fontSize: 15, color: Colors.grey,),),
                 SizedBox(height: 20),
                 
-                
-
                 Text('결제 수단', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                 // SizedBox(height: 300,),
                 Container(
