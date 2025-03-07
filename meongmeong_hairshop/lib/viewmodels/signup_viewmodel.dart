@@ -1,46 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:meongmeong_hairshop/models/pet.dart';
-import 'package:meongmeong_hairshop/models/reservation.dart';
-import 'package:meongmeong_hairshop/models/salon.dart';
-import 'package:meongmeong_hairshop/models/user.dart';
+import 'package:provider/provider.dart';
+import '../providers/user_provider.dart';
 
-import '../models/user.dart';
-import '../models/pet.dart';
-import '../models/salon.dart';
-import '../models/reservation.dart';
+// 유효성 검사 메서드
+bool validateUserInfo(BuildContext context, GlobalKey<FormState> formKey) {
+  final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-class SignupViewModel with ChangeNotifier {
-  User? _user;
-  Pet? _pet;
-  Salon? _salon;
-  Reservation? _reservation;
-
-  User? get user => _user;
-  Pet? get pet => _pet;
-  Salon? get salon => _salon;
-  Reservation? get reservation => _reservation;
-
-  void setUser(User user) {
-    _user = user;
-    notifyListeners();
-  }
-
-  void setPet(Pet pet) {
-    _pet = pet;
-    notifyListeners();
-  }
-
-  void setSalon(Salon salon) {
-    _salon = salon;
-    notifyListeners();
-  }
-
-  void setReservation(Reservation reservation) {
-    _reservation = reservation;
-    notifyListeners();
-  }
-
-  Future<void> signup() async {
-    // ...
+  if (formKey.currentState!.validate() && userProvider.passwordMatch) {
+    return true;
+  } else {
+    if (!userProvider.passwordMatch) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("비밀번호가 일치하지 않습니다.")));
+    }
+    return false;
   }
 }

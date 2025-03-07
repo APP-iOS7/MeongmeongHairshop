@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:meongmeong_hairshop/providers/user_provider.dart';
+import 'package:meongmeong_hairshop/providers/pet_provider.dart';
 import 'package:provider/provider.dart';
 import 'routes.dart';
 import 'config/app_theme.dart';
@@ -10,7 +11,10 @@ Future<void> main() async {
   await Firebase.initializeApp();
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (context) => UserProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => PetProvider()),
+      ],
       child: const MyApp(),
     ),
   );

@@ -50,7 +50,7 @@ class LoginScreen extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/signup');
+                Navigator.pushNamed(context, '/signup/user');
               },
               child: Text('회원가입'),
             ),
