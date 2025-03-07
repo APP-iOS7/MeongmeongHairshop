@@ -142,10 +142,6 @@ class SignupPetScreen extends StatelessWidget {
           _petNameController.clear();
           _petBreedController.clear();
           _petAgeMonthController.clear();
-
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('반려동물이 추가되었습니다')));
         } else {
           ScaffoldMessenger.of(
             context,
@@ -174,13 +170,13 @@ class SignupPetScreen extends StatelessWidget {
       // Firestore에 정보 저장
       var db = FirebaseFirestore.instance;
 
-      final user = userProvider.user.toJson();
+      final user = userProvider.user.toFirestore();
 
       await db
           .collection("users")
           .doc(credential.user!.uid)
           .set(user)
-          .onError((e, _) => print("Error writing document: $e"));
+          .onError((e, _) => debugPrint("Error writing document: $e"));
 
       ScaffoldMessenger.of(
         context,
@@ -188,22 +184,13 @@ class SignupPetScreen extends StatelessWidget {
 
       Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
     } on FirebaseAuthException catch (e) {
-      print('회원가입 오류: ${e.code} - ${e.message}');
-
-      String errorMessage = "회원가입에 실패했습니다.";
-      if (e.code == 'weak-password') {
-        errorMessage = '비밀번호가 너무 약합니다.';
-      } else if (e.code == 'email-already-in-use') {
-        errorMessage = '이미 등록된 이메일입니다.';
-      } else if (e.code == 'invalid-email') {
-        errorMessage = '유효하지 않은 이메일 형식입니다.';
-      }
+      debugPrint('회원가입 오류: ${e.code} - ${e.message}');
 
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text(errorMessage)));
+      ).showSnackBar(SnackBar(content: Text('회원가입에 실패했습니다.')));
     } catch (e) {
-      print('예상치 못한 오류: $e');
+      debugPrint('예상치 못한 오류: $e');
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("예상치 못한 오류가 발생했습니다.")));

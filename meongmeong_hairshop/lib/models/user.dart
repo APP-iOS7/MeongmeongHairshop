@@ -9,11 +9,11 @@ class User {
     required this.phoneNumber,
   });
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toFirestore() {
     return {'email': email, 'username': username, 'phoneNumber': phoneNumber};
   }
 
-  factory User.fromJson(Map<String, dynamic> json) {
+  factory User.fromFirestore(Map<String, dynamic> json) {
     return User(
       email: json['email'],
       username: json['username'],
