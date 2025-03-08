@@ -34,7 +34,7 @@ class ReservationProvider with ChangeNotifier {
 
   // 시술 총 금액
   int _totalFee = 0;
-  // 디자이너 직책
+  // 선택한 디자이너 직책
   String _position = '';
   // getter
   int get totalFee => _totalFee;

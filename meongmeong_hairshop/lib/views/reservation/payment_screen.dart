@@ -3,7 +3,9 @@ import 'package:intl/intl.dart';
 import 'package:meongmeong_hairshop/providers/reservation_provider.dart';
 import 'package:meongmeong_hairshop/providers/user_provider.dart';
 import 'package:meongmeong_hairshop/viewmodels/reservation_viewmodel.dart';
+import 'package:meongmeong_hairshop/views/login_screen.dart';
 import 'package:provider/provider.dart';
+
 
 class PaymentScreen extends StatelessWidget {
   
@@ -21,21 +23,24 @@ class PaymentScreen extends StatelessWidget {
         backgroundColor: Colors.green,
         ),
       body: Consumer<UserProvider>(
-        builder: (_, provider2, _) {
+        builder: (_, userProvider, _) {
           return Consumer<ReservationProvider>(
-            builder: (context, provider, child) {
+            builder: (context, reservationProvider, child) {
+              
+              // 예약 provider에도 유저 이름 저장
+              reservationProvider.userName = userProvider.user.username;
               int totalFee = 0;
               // 추가요금(직급에 따라)
               int additionalFee = 0;
               
-              for (String service in provider.reservation.services) {
-                totalFee += provider.prices[provider.services.indexOf(service)];
+              for (String service in reservationProvider.reservation.services) {
+                totalFee += reservationProvider.prices[reservationProvider.services.indexOf(service)];
               }
               
               // 직급에 따라 추가 비용 발생 
-              if (provider.position == '원장') {
+              if (reservationProvider.position == '원장') {
                      additionalFee = 30000;
-                } else if (provider.position == '실장') {
+                } else if (reservationProvider.position == '실장') {
                     additionalFee = 10000;
                 } else {
                       additionalFee = 0;
@@ -48,32 +53,32 @@ class PaymentScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('예약날짜', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                    Text('${DateFormat('MM. dd (E) ', 'ko_KR').format(provider.reservation.date)} ${provider.reservation.reservedTime}', style: TextStyle(fontSize: 15),),
+                    Text('${DateFormat('MM. dd (E) ', 'ko_KR').format(reservationProvider.reservation.date)} ${reservationProvider.reservation.reservedTime}', style: TextStyle(fontSize: 15),),
                     SizedBox(height: 20),
                 
                     Text('디자이너', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                    Text('${provider.reservation.designer} ${provider.position}', style: TextStyle(fontSize: 15,),),
+                    Text('${reservationProvider.reservation.designer} ${reservationProvider.position}', style: TextStyle(fontSize: 15,),),
                     SizedBox(height: 20),
                     
                     Text('시술 메뉴', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
           
                     Column(
                       children: [
-                        for (String service in provider.reservation.services)
+                        for (String service in reservationProvider.reservation.services)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(service),
                               // 내가 찾는 서비스가 전체 서비스의 몇 번째 인덱스에 위치해있는지
                               // 가격과 서비스가 일대일로 대응하므로 가능.
-                              Text('${provider.prices[provider.services.indexOf(service)]}원'), 
+                              Text('${reservationProvider.prices[reservationProvider.services.indexOf(service)]}원'), 
                             ],
                           ),
           
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(provider.position),
+                              Text(reservationProvider.position),
                               Text('$additionalFee원'),
                             ],
                           ),
@@ -112,9 +117,9 @@ class PaymentScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         // userprovider에서 정보를 가져오는 부분
-                        Text(provider2.user.username),
+                        Text(reservationProvider.userName),
                         Text("("),
-                        Text(provider.reservation.petName),
+                        Text(reservationProvider.reservation.petName),
                         Text(")"),
                       ],
                     ),
@@ -127,11 +132,17 @@ class PaymentScreen extends StatelessWidget {
                       height: 70,
                       child: FloatingActionButton(
                         onPressed: () {
-                          provider.setTotalFee(totalFee);
-                          if(provider.reservation.services.isNotEmpty) {
-                            _firestoreService.addReservation(provider2.user.username,provider.reservation.name, provider.reservation.openTime, provider.reservation.closeTime, provider.reservation.address, provider.reservation.date, provider.reservation.reservedTime, provider.reservation.designer, provider.reservation.services, provider.reservation.petName, totalFee);
+                          reservationProvider.setTotalFee(totalFee);
+                          if(reservationProvider.reservation.services.isNotEmpty) {
+                            _firestoreService.addReservation(reservationProvider.userName,reservationProvider.reservation.name, reservationProvider.reservation.openTime, reservationProvider.reservation.closeTime, reservationProvider.reservation.address, reservationProvider.reservation.date, reservationProvider.reservation.reservedTime, reservationProvider.reservation.designer, reservationProvider.position,reservationProvider.reservation.services, reservationProvider.reservation.petName, totalFee);
+                            reservationProvider.allReset();
+                            
+                            // 홈(?)으로 돌아가기
+                            // 기존 navigator 스택 모두 제거
+                            Navigator.pushAndRemoveUntil(
+                              context,MaterialPageRoute(builder: (context) => LoginScreen()),(route) => false, 
+                            );
                           }
-                          _firestoreService.getAllReservations();
                         },
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero, 
@@ -139,8 +150,18 @@ class PaymentScreen extends StatelessWidget {
                         backgroundColor: Colors.green,
                         child: Text('결제', style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),)
                         ),
-                    )
+                    ),
                     
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(onPressed: () {
+                          Navigator.pushNamed(context, '/reservationList');
+                        }, 
+                        child: Text('예약내역 보기', style: TextStyle(color: Colors.grey[700]),),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               );
