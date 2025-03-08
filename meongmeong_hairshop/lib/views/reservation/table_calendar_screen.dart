@@ -23,6 +23,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
         builder: (context, provider, child) {
           return Center(
             child: TableCalendar(
+              // 기본 설정
               locale: 'ko_KR',
               firstDay: DateTime.utc(2021, 10, 16),
               lastDay: DateTime.utc(2030, 3, 14),
@@ -30,6 +31,8 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
               selectedDayPredicate: (day) {
                 return isSameDay(_selectedDay, day);
               },
+
+              // 날짜 선택했을 때 로직
               onDaySelected: (selectedDay, focusedDay) {
                 setState(() {
                   _selectedDay = selectedDay;
@@ -39,14 +42,43 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                   provider.setDateSelected();
                 });
               },
-          
+              // 헤더 스타일 설정
               headerStyle: HeaderStyle(
                 titleCentered: true,
                 titleTextFormatter: (date, locale) => DateFormat.yMMMM(locale).format(date),
                 formatButtonVisible: false,
+                decoration: const BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+
+                ),
               ),
-              // 오늘 날짜를 일반 텍스트로 표시
+              
+              // 요일 스타일 설정
+              daysOfWeekStyle: DaysOfWeekStyle(
+                weekendStyle: TextStyle(
+                  color: Colors.red,
+                ),
+              ),
+
+              // 주말의 기준을 일요일로
+              weekendDays: [
+                DateTime.sunday,
+              ],
+              
+              // 주말 날짜를 빨간색으로 표시
+              calendarStyle: CalendarStyle(
+                weekendTextStyle: TextStyle(
+                  color: Colors.red,
+                )
+              ),
+              
+              // 날짜 표시 설정
               calendarBuilders: CalendarBuilders(
+                
+                // 오늘 날짜를 일반 텍스트로 표시
                 todayBuilder: (context, date, _) {
                   return Center(
                     child: Text(
@@ -56,8 +88,8 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                   );
                 },
           
-              // 선택한 날짜는 사각형으로 표시
-              selectedBuilder: (context, date, events) {
+                // 선택한 날짜는 사각형으로 표시
+                selectedBuilder: (context, date, events) {
                   return Center(
                     child: Container(
                       width: 40,

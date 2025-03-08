@@ -3,6 +3,9 @@ import 'package:meongmeong_hairshop/models/reservation.dart';
 
 
 class ReservationProvider with ChangeNotifier {
+  // 유저 이름
+  String userName = '';
+  
   Reservation _reservation = Reservation(name: '', address: '', openTime: TimeOfDay.now(), closeTime: TimeOfDay.now(), date: DateTime.now(), reservedTime: '', designer: '', services: {}, petName: '');
   // getter
   Reservation get reservation => _reservation;
@@ -24,7 +27,7 @@ class ReservationProvider with ChangeNotifier {
   // 시술 메뉴 종류
   List<String> _services = ['스페셜컷','목욕 + 위생미용(소)','목욕 + 위생미용(중)' , '목욕 + 위생미용(대)','목욕(소)', '목욕(중)', '목욕(대)'];
   // 시술 가격
-  List<int> _prices = [150000,50000,100000,150000,20000,30000,40000];
+  List<int> _prices = [100000,50000,100000,150000,20000,30000,40000];
   // getter
   List<String> get services => _services;
   List<int> get prices => _prices;
@@ -37,8 +40,19 @@ class ReservationProvider with ChangeNotifier {
   int get totalFee => _totalFee;
   String get position => _position;
 
-  
-
+  // 모든 정보 리셋
+  void allReset() {
+    _reservation = Reservation(name: '', address: '', openTime: TimeOfDay.now(), closeTime: TimeOfDay.now(), date: DateTime.now(), reservedTime: '', designer: '', services: {}, petName: '');
+    userName = '';
+    _isDateSelected = false;
+    _isReservedTimeSelected = false;
+    _isDesignerSelected = false;
+    _isServicesSelected = false;
+    _isPetSelected = false;
+    _totalFee = 0;
+    _position = '';
+    notifyListeners();
+  }
   void updateName(String name) {
     _reservation.name = name;
     notifyListeners();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:meongmeong_hairshop/providers/reservation_provider.dart';
+import 'package:meongmeong_hairshop/providers/user_provider.dart';
 import 'package:meongmeong_hairshop/views/reservation/designer_screen.dart';
 import 'package:meongmeong_hairshop/views/reservation/dog_selection_screen.dart';
 import 'package:meongmeong_hairshop/views/reservation/service_selection_screen.dart';
@@ -91,7 +92,7 @@ class ReservationScreen extends StatelessWidget {
                         // 시술 받을 강아지 선택
                         Text('4. 시술 받을 강아지를 선택해주세요.', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                         DogSelectionScreen(),
-
+      
                         // bool 여부(테스트 시)
                         // Text(provider.isDateSelected.toString()),
                         // Text(provider.isReservedTimeSelected.toString()),

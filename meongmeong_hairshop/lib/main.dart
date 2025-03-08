@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:meongmeong_hairshop/providers/reservation_provider.dart';
@@ -9,6 +10,13 @@ import 'package:intl/date_symbol_data_local.dart';
 void main()  async {
   // 날짜 한글화
   await initializeDateFormatting();
+  
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  
+  // 에뮬레이터 사용
+  FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+   
   runApp(
     MultiProvider(
       providers: [
