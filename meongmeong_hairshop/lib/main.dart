@@ -6,6 +6,7 @@ import 'package:meongmeong_hairshop/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'routes.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'config/app_theme.dart';
 
 void main()  async {
   // 날짜 한글화
@@ -34,7 +35,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/reservation',
+      theme: buildLightTheme(),
+      initialRoute: '/login',
       routes: appRoutes, // routes 파일에서 정의한 경로 사용
     );
   }
