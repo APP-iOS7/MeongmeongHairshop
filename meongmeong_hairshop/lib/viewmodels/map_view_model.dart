@@ -1,77 +1,122 @@
+import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-
 import '../models/salon.dart';
 
 class MapViewModel with ChangeNotifier {
-  List<NMarker> markers = [];
-  List<Salon> salons = [];
+  late NaverMapController mapController;
+  // 살롱 목록
+  List<Salon> _salons = [];
+  List<Salon> get salons => _salons;
+
+  // 로딩 상태
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  // 현재 위치
   Position? currentPosition;
 
-  Future<void> init() async {
-    await _getCurrentLocation();
-    await _fetchPetSalonData();
+  // 초기화 시, 현재 위치 가져오기
+  void init() {
+    fetchCurrentPosition();
   }
 
-  Future<void> _getCurrentLocation() async {
-    try {
-      currentPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-      notifyListeners();
-    } catch (e) {
-      print('Error getting location: $e');
+  /// 네이버 로컬 API 호출하여 살롱 검색
+  Future<List<Salon>> fetchSalons(String query, NCameraPosition position) async {
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+      position.target.latitude,
+      position.target.longitude,
+    );
+    String location =
+        placemarks.isNotEmpty ? placemarks.first.locality ?? '' : '';
+
+    if (location.isEmpty) {
+      print("주소를 찾을 수 없습니다.");
+      return [];
     }
-  }
-
-  Future<void> _fetchPetSalonData() async {
-    if (currentPosition == null) return;
+    // 위치 기반 검색을 위해 지역명 포함
+    final encodedQuery = Uri.encodeComponent('$query $location');
 
     final url = Uri.parse(
-      'https://openapi.naver.com/v1/search/local.json?query=애견미용실&display=20&latitude=${currentPosition!.latitude}&longitude=${currentPosition!.longitude}',
+      'https://openapi.naver.com/v1/search/local.json?query=$encodedQuery&display=5',
     );
-    final headers = {
-      'X-Naver-Client-Id': 'yd79jdvpdg',
-      'X-Naver-Client-Secret': 'lgryqtHmN5wwoHgoar6qYyx0RnaNE2IljYpIGSFX',
-    };
 
-    try {
-      final response = await http.get(url, headers: headers);
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        salons = (data['items'] as List).map((item) => Salon.fromJson(item)).toList();
-        _updateMarkers();
-      } else {
-        print('Failed to fetch data: ${response.statusCode}');
+    print('API 요청: $url');
+
+    final response = await http.get(
+      url,
+      headers: {
+        'X-Naver-Client-Id': 'M9eZROGKhyCts939lvwq',
+        'X-Naver-Client-Secret': '5NiRFDHjvb',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      print(data);
+      final List<dynamic> places = data['items'] ?? [];
+
+      // Salon 모델 리스트로 변환
+      try {
+        return places.map((place) {
+          return Salon(
+            title:
+                place['title']?.replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), '') ??
+                '',
+            link: place['link'] ?? '',
+            category: place['category'] ?? '',
+            description: place['description'] ?? '',
+            telephone: place['telephone'] ?? '',
+            address: place['address'] ?? '',
+            roadAddress: place['roadAddress'] ?? '',
+            mapx: (double.tryParse(place['mapx'] ?? '') ?? 0) / 10000000,
+            mapy: (double.tryParse(place['mapy'] ?? '') ?? 0) / 10000000,
+          );
+        }).toList();
+      } catch (e) {
+        print('데이터 변환 오류: $e');
+        return [];
       }
-    } catch (e) {
-      print('Error fetching data: $e');
+    } else {
+      print('API 호출 실패: ${response.statusCode}');
+      return [];
     }
   }
 
-  void _updateMarkers() {
-    markers = salons.map((salon) {
-      return NMarker(
-        id: salon.name,
-        position: NLatLng(
-          double.parse(salon.mapy) / 10000000,
-          double.parse(salon.mapx) / 10000000,
-        ),
-        // 수정해야함
-        // onTap: (marker, iconSize) {
-        //   _showSalonDetails(salon);
-        // },
+  /// 살롱 데이터 검색
+  Future<void> fetchPetSalonData(String query) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      // 네이버 API 호출
+      final salonData = await fetchSalons(
+        query,
+        mapController.nowCameraPosition,
       );
-    }).toList();
+      _salons = salonData;
+      print('펫미용실 리스트: $_salons');
+    } catch (e) {
+      print('검색 오류: $e');
+    }
+
+    _isLoading = false;
     notifyListeners();
   }
 
-  void _showSalonDetails(Salon salon) {
-    // 모달 표시 로직
-    // ...
+  /// 현재 위치 가져오기
+  void fetchCurrentPosition() {
+    Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((position) {
+          currentPosition = position;
+          notifyListeners();
+        })
+        .catchError((e) {
+          print('위치 가져오기 오류: $e');
+        });
   }
 }

@@ -10,7 +10,7 @@ void main() async{
 
   await NaverMapSdk.instance.initialize(
     clientId: 'yd79jdvpdg', // 네이버 지도 API 클라이언트 ID
-    onAuthFailed: (ex) => print("********* auth failed ${ex} ********"),
+    onAuthFailed: (ex) => print("********* auth failed $ex ********"),
   );
 
 
@@ -18,6 +18,8 @@ void main() async{
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

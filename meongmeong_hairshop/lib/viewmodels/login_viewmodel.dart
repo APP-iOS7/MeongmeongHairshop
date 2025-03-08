@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../models/user.dart';
 
 class LoginViewModel with ChangeNotifier {
   String? _email;
