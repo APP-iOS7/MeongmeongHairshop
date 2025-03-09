@@ -11,8 +11,8 @@ import 'package:meongmeong_hairshop/providers/user_provider.dart';
 import 'package:meongmeong_hairshop/providers/pet_provider.dart';
 import 'package:provider/provider.dart';
 
-import 'views/login_screen.dart';
-import 'views/main_screen.dart';
+import 'views/auth/login_screen.dart';
+import 'views/home/main_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
