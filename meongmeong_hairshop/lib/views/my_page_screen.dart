@@ -15,6 +15,7 @@ class MyPageScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            _buildProfile(context),
             TextButton(onPressed: () {}, child: Text('회원 정보 수정')),
             TextButton(onPressed: () {}, child: Text('반려 동물 관리')),
             TextButton(onPressed: () {}, child: Text('예약 내역')),
@@ -24,4 +25,39 @@ class MyPageScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _buildProfile(BuildContext context) {
+  final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+  return Padding(
+    padding: const EdgeInsets.all(10),
+    child: Container(
+      padding: EdgeInsets.all(16),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 139, 216, 142),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            userProvider.user.username,
+            style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 10.0), // 간격
+          Text(
+            '이메일: ${userProvider.user.email}',
+            style: TextStyle(fontSize: 16.0),
+          ),
+          SizedBox(height: 8.0), // 간격
+          Text(
+            '전화번호: ${userProvider.user.phoneNumber}',
+            style: TextStyle(fontSize: 16.0),
+          ),
+        ],
+      ),
+    ),
+  );
 }
