@@ -6,12 +6,25 @@ import '../../providers/pet_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../viewmodels/signup_viewmodel.dart';
 
-class SignupPetScreen extends StatelessWidget {
-  SignupPetScreen({super.key});
+class SignupPetScreen extends StatefulWidget {
+  const SignupPetScreen({super.key});
 
+  @override
+  State<SignupPetScreen> createState() => _SignupPetScreenState();
+}
+
+class _SignupPetScreenState extends State<SignupPetScreen> {
   final TextEditingController _petNameController = TextEditingController();
   final TextEditingController _petBreedController = TextEditingController();
   final TextEditingController _petAgeMonthController = TextEditingController();
+
+  @override
+  void dispose() {
+    _petNameController.dispose();
+    _petBreedController.dispose();
+    _petAgeMonthController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +65,8 @@ class SignupPetScreen extends StatelessWidget {
             SizedBox(height: 24),
 
             ElevatedButton(
-              onPressed: () => signUp(context, userProvider, petProvider),
+              onPressed:
+                  () async => await signUp(context, userProvider, petProvider),
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 15),
               ),

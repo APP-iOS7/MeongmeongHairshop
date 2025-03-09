@@ -11,17 +11,23 @@ Future<void> signUp(
   UserProvider userProvider,
   PetProvider petProvider,
 ) async {
+  if (userProvider.user == null) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("사용자 정보가 없습니다. 다시 시도해주세요.")));
+    return;
+  }
   try {
     final credential = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(
-          email: userProvider.user.email.trim(),
+          email: userProvider.user!.email,
           password: userProvider.password,
         );
 
     // Firestore에 정보 저장
     var db = FirebaseFirestore.instance;
 
-    final user = userProvider.user.toFirestore();
+    final user = userProvider.user!.toFirestore();
 
     await db
         .collection("users")
@@ -52,14 +58,16 @@ Future<void> signUp(
 bool validateUserInfo(BuildContext context, GlobalKey<FormState> formKey) {
   final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-  if (formKey.currentState!.validate() && userProvider.passwordMatch) {
-    return true;
-  } else {
-    if (!userProvider.passwordMatch) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("비밀번호가 일치하지 않습니다.")));
-    }
+  if (!formKey.currentState!.validate()) {
     return false;
   }
+
+  if (!userProvider.passwordMatch) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('비밀번호가 일치하지 않습니다')));
+    return false;
+  }
+
+  return true;
 }

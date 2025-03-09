@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../providers/user_provider.dart';
 import '../../viewmodels/login_viewmodel.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
+  State<LoginScreen> createState() => _LoginScreenState();
+}
 
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('로그인')),
       body: Padding(
@@ -17,9 +28,16 @@ class LoginScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildEmailField(userProvider),
+            TextField(
+              controller: _emailController,
+              decoration: InputDecoration(labelText: '이메일'),
+            ),
 
-            _buildPasswordField(userProvider),
+            TextField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: InputDecoration(labelText: '비밀번호'),
+            ),
 
             SizedBox(height: 30),
 
@@ -29,7 +47,9 @@ class LoginScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    signIn(context);
+                    String email = _emailController.text.trim();
+                    String password = _passwordController.text;
+                    signIn(context, email, password);
                   },
                   child: Text('로그인'),
                 ),
@@ -44,33 +64,6 @@ class LoginScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildEmailField(UserProvider userProvider) {
-    return Consumer<UserProvider>(
-      builder: (context, userProvider, child) {
-        return TextField(
-          decoration: InputDecoration(labelText: '이메일'),
-          onChanged: (value) {
-            userProvider.updateEmail(value);
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildPasswordField(UserProvider userProvider) {
-    return Consumer<UserProvider>(
-      builder: (context, userProvider, child) {
-        return TextField(
-          obscureText: true,
-          decoration: InputDecoration(labelText: '비밀번호'),
-          onChanged: (value) {
-            userProvider.updatePassword(value);
-          },
-        );
-      },
     );
   }
 }
