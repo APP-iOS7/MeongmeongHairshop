@@ -46,12 +46,12 @@ Widget _buildProfile(BuildContext context) {
             userProvider.user.username,
             style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 10.0), // 간격
+          SizedBox(height: 10.0),
           Text(
             '이메일: ${userProvider.user.email}',
             style: TextStyle(fontSize: 16.0),
           ),
-          SizedBox(height: 8.0), // 간격
+          SizedBox(height: 8.0),
           Text(
             '전화번호: ${userProvider.user.phoneNumber}',
             style: TextStyle(fontSize: 16.0),

@@ -1,11 +1,15 @@
+// Firebase
+import 'package:cloud_firestore/cloud_firestore.dart'; // 에뮬
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
+import 'config/app_theme.dart';
+import 'routes.dart';
+// Provider
 import 'package:meongmeong_hairshop/providers/user_provider.dart';
 import 'package:meongmeong_hairshop/providers/pet_provider.dart';
 import 'package:provider/provider.dart';
-import 'routes.dart';
-import 'config/app_theme.dart';
 
 import 'views/login_screen.dart';
 import 'views/main_screen.dart';
@@ -13,6 +17,11 @@ import 'views/main_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  //에뮬레이터 사용
+  FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+  FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+
   runApp(
     MultiProvider(
       providers: [
