@@ -1,11 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:meongmeong_hairshop/config/app_styles.dart';
 import 'package:provider/provider.dart';
 import '../models/user_pet.dart';
 import '../providers/pet_provider.dart';
 import '../providers/user_provider.dart';
+import '../viewmodels/signup_viewmodel.dart';
 
 class SignupPetScreen extends StatelessWidget {
   SignupPetScreen({super.key});
@@ -53,7 +52,7 @@ class SignupPetScreen extends StatelessWidget {
             SizedBox(height: 24),
 
             ElevatedButton(
-              onPressed: () => _signUp(context, userProvider, petProvider),
+              onPressed: () => signUp(context, userProvider, petProvider),
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 15),
               ),
@@ -152,48 +151,5 @@ class SignupPetScreen extends StatelessWidget {
       label: Text('반려동물 추가'),
       style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
     );
-  }
-
-  // 회원가입 처리: 뷰모델로 이동해야함
-  Future<void> _signUp(
-    BuildContext context,
-    UserProvider userProvider,
-    PetProvider petProvider,
-  ) async {
-    try {
-      final credential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-            email: userProvider.user.email.trim(),
-            password: userProvider.password,
-          );
-
-      // Firestore에 정보 저장
-      var db = FirebaseFirestore.instance;
-
-      final user = userProvider.user.toFirestore();
-
-      await db
-          .collection("users")
-          .doc(credential.user!.uid)
-          .set(user)
-          .onError((e, _) => debugPrint("Error writing document: $e"));
-
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("회원가입 성공! 로그인 페이지로 이동합니다.")));
-
-      Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
-    } on FirebaseAuthException catch (e) {
-      debugPrint('회원가입 오류: ${e.code} - ${e.message}');
-
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('회원가입에 실패했습니다.')));
-    } catch (e) {
-      debugPrint('예상치 못한 오류: $e');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("예상치 못한 오류가 발생했습니다.")));
-    }
   }
 }

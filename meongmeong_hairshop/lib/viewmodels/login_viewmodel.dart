@@ -21,3 +21,15 @@ Future<void> signIn(BuildContext context) async {
     );
   }
 }
+
+Future<void> signOut(BuildContext context) async {
+  try {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+  } catch (e) {
+    debugPrint('로그아웃 오류: $e');
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('로그아웃에 실패했습니다.')));
+  }
+}
