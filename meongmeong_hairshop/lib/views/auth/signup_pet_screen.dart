@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:meongmeong_hairshop/config/app_styles.dart';
 import 'package:provider/provider.dart';
-import '../models/user_pet.dart';
-import '../providers/pet_provider.dart';
-import '../providers/user_provider.dart';
-import '../viewmodels/signup_viewmodel.dart';
+import '../../models/user_pet.dart';
+import '../../providers/pet_provider.dart';
+import '../../providers/user_provider.dart';
+import '../../viewmodels/signup_viewmodel.dart';
 
 class SignupPetScreen extends StatelessWidget {
   SignupPetScreen({super.key});

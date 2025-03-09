@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meongmeong_hairshop/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../viewmodels/signup_viewmodel.dart';
+import '../../viewmodels/signup_viewmodel.dart';
 
 class SignupUserScreen extends StatelessWidget {
   SignupUserScreen({super.key});

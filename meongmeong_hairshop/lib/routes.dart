@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'views/login_screen.dart';
-import 'views/main_screen.dart';
-import 'views/shop_list_screen.dart';
-import 'views/signup_pet_screen.dart';
-import 'views/signup_user_screen.dart';
+import 'views/auth/login_screen.dart';
+import 'views/home/main_screen.dart';
+import 'views/auth/signup_pet_screen.dart';
+import 'views/auth/signup_user_screen.dart';
 
 // 경로를 관리하는 함수
 Map<String, Widget Function(BuildContext)> appRoutes = {
   '/login': (context) => LoginScreen(),
   '/signup/user': (context) => SignupUserScreen(),
   '/signup/pet': (context) => SignupPetScreen(),
-  // '/success': (context) => ShopListScreen(),
   '/success': (context) => MainScreen(),
 };
