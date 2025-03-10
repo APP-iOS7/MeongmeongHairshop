@@ -18,7 +18,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<UserProvider>(context, listen: false).loadUserData();
+      Provider.of<UserProvider>(context, listen: false).fetchUserfromFirebase();
     });
   }
 

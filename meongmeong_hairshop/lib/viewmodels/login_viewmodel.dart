@@ -9,7 +9,7 @@ Future<void> signIn(BuildContext context, String email, String password) async {
         .signInWithEmailAndPassword(email: email, password: password);
 
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    await userProvider.loadUserData();
+    await userProvider.fetchUserfromFirebase();
 
     if (context.mounted) {
       Navigator.pushNamedAndRemoveUntil(context, '/success', (route) => false);

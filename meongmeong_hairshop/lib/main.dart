@@ -71,7 +71,10 @@ class AuthWrapper extends StatelessWidget {
 
         if (snapshot.hasData) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            Provider.of<UserProvider>(context, listen: false).loadUserData();
+            Provider.of<UserProvider>(
+              context,
+              listen: false,
+            ).fetchUserfromFirebase();
           });
           return MainScreen();
         }
