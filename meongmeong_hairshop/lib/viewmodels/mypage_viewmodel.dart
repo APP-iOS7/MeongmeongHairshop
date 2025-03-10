@@ -29,10 +29,15 @@ class MyPageViewModel with ChangeNotifier {
     // 예약 목록 가져오기
     _reservations = [
       Reservation(
+        name: '',
+        address: '',
+        openTime: TimeOfDay.now(),
+        closeTime: TimeOfDay.now(),
         date: DateTime.now(),
-        time: TimeOfDay.now(),
-        designer: '홍길동',
-        services: ['컷', '목욕'],
+        reservedTime: '',
+        designer: '',
+        services: {},
+        petName: '',
       ),
       // ...
     ];
