@@ -121,15 +121,23 @@ class PetProvider with ChangeNotifier {
 
       for (var pet in _pets) {
         final petDocRef = userDocRef.collection('pets').doc();
-        batch.set(petDocRef, pet.toFirestore());
+        pet.id = petDocRef.id;
+
+        batch.set(petDocRef, {
+          ...pet.toFirestore(),
+          'createdAt': FieldValue.serverTimestamp(),
+        });
       }
 
       await batch.commit();
+
+      notifyListeners();
     } catch (e) {
       debugPrint('Error saving pets to Firestore: $e');
     }
   }
 
+  // 앱 실행 시 데이터를 불러오도록 처리
   Future<void> fetchPetsFromFirestore(String userId) async {
     try {
       _isLoading = true;
@@ -147,14 +155,9 @@ class PetProvider with ChangeNotifier {
 
       for (var doc in querySnapshot.docs) {
         final data = doc.data();
-        _pets.add(
-          Pet(
-            id: doc.id,
-            name: data['name'] ?? '',
-            breed: data['breed'] ?? '',
-            ageMonths: data['ageMonths'] ?? 0,
-          ),
-        );
+        _pets.add(Pet.fromFirestore(data, doc.id));
+        debugPrint(doc.id);
+        debugPrint(_pets.first.name);
       }
 
       _isLoading = false;
@@ -163,17 +166,48 @@ class PetProvider with ChangeNotifier {
       _isLoading = false;
       debugPrint('Error fetching pets from Firestore: $e');
       notifyListeners();
-      throw e;
     }
   }
 
-  Future<void> deletePetFromFirestore(String userId, String petId) async {
+  Future<void> addPetToFirestore(String userId) async {
+    try {
+      final userDocRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId);
+      final petDocRef = userDocRef.collection('pets').doc();
+
+      await petDocRef.set({
+        'id': petDocRef.id,
+        'name': _currentPet.name,
+        'breed': _currentPet.breed,
+        'ageMonths': _currentPet.ageMonths,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      // 로컬 프로바이더에도 반영
+      _pets.add(
+        Pet(
+          id: petDocRef.id,
+          name: _currentPet.name,
+          breed: _currentPet.breed,
+          ageMonths: _currentPet.ageMonths,
+        ),
+      );
+
+      _currentPet = Pet(name: '', breed: '', ageMonths: 0);
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error adding pet to Firestore: $e');
+    }
+  }
+
+  Future<void> deletePetFromFirestore(String userId, int index) async {
     try {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
           .collection('pets')
-          .doc(petId)
+          .doc(pets[index].id)
           .delete();
     } catch (e) {
       debugPrint('Error deleting pet from Firestore: $e');
