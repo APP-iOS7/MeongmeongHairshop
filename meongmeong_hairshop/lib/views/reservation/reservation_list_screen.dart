@@ -17,19 +17,18 @@ class _ReservationListScreenState extends State<ReservationListScreen> {
   
   Future<List<Map<String, dynamic>>> _reservations = Future.value([]);
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    
-    // 초기에 예약정보를 firestore에서 가져옴
-    Future.delayed(Duration.zero, () {
-    final userprovider = context.read<UserProvider>();
-    setState(() {
-      _reservations = _firestoreService.getUserReservations(userprovider.user.username);
-    });
-  });
-  }
+    @override
+    void initState() {
+      super.initState();
+      fetchReservations();
+    }
+
+    Future<void> fetchReservations() async {
+      final userProvider = context.read<UserProvider>();
+      setState(() {
+        _reservations = _firestoreService.getUserReservations(userProvider.user.username);
+      });
+    }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +64,7 @@ class _ReservationListScreenState extends State<ReservationListScreen> {
                             trailing: Text('${snapshot.data![index]['date'].toString().substring(0,10)} ${snapshot.data![index]['reservedTime']}'), 
                           
                             onTap: () {
-                              Navigator.pushNamed(context, '/reservationDetail', arguments: snapshot.data![index]['createdAt']);
+                              Navigator.pushNamed(context, '/reservationDetail', arguments: snapshot.data![index]['createdAt']).then((_) => fetchReservations());
                             },
                             shape: Border(
                               bottom: BorderSide(

@@ -30,7 +30,7 @@ class ReservationFirestoreService {
     }
   }
 
-  // 데이터 불러오기
+  // 전체 예약 불러오기
   Future<List<Map<String, dynamic>>> getUserReservations(String userName) async {
   try {
     QuerySnapshot snapshot = await _firestore.collection('reservations').where('userName', isEqualTo: userName).get();
@@ -93,6 +93,16 @@ class ReservationFirestoreService {
     } catch (e) {
       print("예약 데이터 가져오기 실패: $e");
       return {}; // 실패 시 빈 리스트 리턴
+    }
+  }
+
+  // 예약 삭제
+  Future<void> deleteReservation(String createdAt) async {
+    try {
+      await _firestore.collection(collectionName).doc(createdAt).delete();
+      print("예약 삭제 완료! (ID: $createdAt)");
+    } catch (e) {
+      print("예약 삭제 실패: $e");
     }
   }
 }
