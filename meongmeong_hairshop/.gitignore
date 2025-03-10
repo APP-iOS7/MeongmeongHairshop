@@ -1,4 +1,5 @@
 # Miscellaneous
+*lock
 *.class
 *.log
 *.pyc
@@ -14,6 +15,8 @@ migrate_working_dir/
 
 # firebase
 GoogleService-Info.plist
+
+
 
 # IntelliJ related
 *.iml
@@ -46,3 +49,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# ignore .firebaserc for all examples
+**/.firebaserc
