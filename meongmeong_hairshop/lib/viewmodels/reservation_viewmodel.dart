@@ -99,6 +99,39 @@ class ReservationFirestoreService {
     }
   }
 
+  // 예약 모두 가져오기
+  Future<List<Map<String, dynamic>>> getAllReservations() async {
+    try {
+      QuerySnapshot snapshot = await _firestore.collection(collectionName).get();
+      
+      List<Map<String, dynamic>> reservations = snapshot.docs.map((doc) {
+        var data = doc.data() as Map<String, dynamic>; // Firestore 데이터 가져오기
+        var createdAt = doc.id; 
+
+        return {
+          'userName': data.containsKey('userName') ? data['userName'] : 'Unknown',
+          'name': data.containsKey('name') ? data['name'] : 'Unknown',
+          'openTime': data.containsKey('openTime') ? data['openTime'] : {'hour': 0, 'minute': 0},
+          'closeTime': data.containsKey('closeTime') ? data['closeTime'] : {'hour': 0, 'minute': 0},
+          'address': data.containsKey('address') ? data['address'] : 'No Address',
+          'date': data.containsKey('date') ? (data['date'] as Timestamp).toDate() : DateTime.now(),
+          'reservedTime': data.containsKey('reservedTime') ? data['reservedTime'] : '',
+          'designer': data.containsKey('designer') ? data['designer'] : '',
+          'position': data.containsKey('position') ? data['position'] : '',
+          'services': data.containsKey('services') ? List<String>.from(data['services']) : [],
+          'petName': data.containsKey('petName') ? data['petName'] : 'Unknown',
+          'totalFee': data.containsKey('totalFee') ? data['totalFee'] : 0,
+          'createdAt': createdAt,
+        };
+        print("예약 불러오기 완료!");
+      }).toList();
+
+      return reservations; // 리스트 리턴
+    } catch (e) {
+      print("예약 데이터 가져오기 실패: $e");
+      return []; // 실패 시 빈 리스트 리턴
+    } 
+  }
   // 예약 삭제
   Future<void> deleteReservation(String createdAt) async {
     try {

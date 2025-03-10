@@ -37,7 +37,7 @@ class _ReservationListScreenState extends State<ReservationListScreen> {
         Text('예약 목록'),
         backgroundColor: Colors.green,
         ),
-        // firestore에서 데이터를 다 가져올 때 UI를 그리는 빌더 
+        
       body: Consumer<UserProvider>(
         builder: (_, userProvider, _) {
           return Consumer<ReservationProvider>(
