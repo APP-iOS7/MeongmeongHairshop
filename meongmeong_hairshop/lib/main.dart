@@ -1,6 +1,7 @@
 // Firebase
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
@@ -26,10 +27,6 @@ void main() async {
   // 에뮬레이터 사용
   FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
-
-  //에뮬레이터 사용
-  FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
-  FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
 
   runApp(
     MultiProvider(
@@ -75,6 +72,13 @@ class AuthWrapper extends StatelessWidget {
               context,
               listen: false,
             ).fetchUserfromFirebase();
+
+            final currentUser = auth.FirebaseAuth.instance.currentUser;
+            final userId = currentUser!.uid;
+            Provider.of<PetProvider>(
+              context,
+              listen: false,
+            ).fetchPetsFromFirestore(userId);
           });
           return MainScreen();
         }

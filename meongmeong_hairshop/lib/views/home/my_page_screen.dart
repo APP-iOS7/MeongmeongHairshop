@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:meongmeong_hairshop/models/pet.dart';
+import 'package:meongmeong_hairshop/providers/pet_provider.dart';
 import 'package:meongmeong_hairshop/providers/user_provider.dart';
 import 'package:meongmeong_hairshop/viewmodels/login_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class MyPageScreen extends StatelessWidget {
-  const MyPageScreen({super.key});
+  MyPageScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,10 @@ class MyPageScreen extends StatelessWidget {
               onPressed: () => Navigator.pushNamed(context, '/editProfile'),
               child: Text('회원 정보 수정'),
             ),
-            TextButton(onPressed: () {}, child: Text('반려 동물 관리')),
+            TextButton(
+              onPressed: () => Navigator.pushNamed(context, '/managePet'),
+              child: Text('반려 동물 관리'),
+            ),
             TextButton(onPressed: () {}, child: Text('예약 내역')),
             TextButton(
               onPressed: () => _showLogoutConfirmationDialog(context),
@@ -51,6 +56,11 @@ void _showLogoutConfirmationDialog(BuildContext context) {
             onPressed: () {
               Navigator.of(context).pop();
               signOut(context);
+              PetProvider petProvider = Provider.of<PetProvider>(
+                context,
+                listen: false,
+              );
+              petProvider.resetAll();
             },
             child: Text('로그아웃'),
           ),

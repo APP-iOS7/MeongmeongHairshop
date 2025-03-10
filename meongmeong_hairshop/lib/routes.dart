@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meongmeong_hairshop/views/auth/manage_pet_screen.dart';
 import 'views/auth/edit_user_screen.dart';
 import 'views/auth/login_screen.dart';
 import 'views/home/main_screen.dart';
@@ -14,7 +15,9 @@ Map<String, Widget Function(BuildContext)> appRoutes = {
   '/signup/user': (context) => SignupUserScreen(),
   '/signup/pet': (context) => SignupPetScreen(),
   '/success': (context) => MainScreen(),
+
   '/editProfile': (context) => EditUserScreen(),
+  '/managePet': (context) => ManagePetScreen(),
 
   '/reservation': (context) => ReservationScreen(),
   '/payment': (context) => PaymentScreen(),

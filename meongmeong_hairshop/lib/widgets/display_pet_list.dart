@@ -1,8 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
-import 'package:meongmeong_hairshop/providers/user_provider.dart';
-import 'package:provider/provider.dart';
 import '../config/app_styles.dart';
 import '../models/pet.dart';
 import '../providers/pet_provider.dart';
@@ -49,10 +46,6 @@ Widget buildPetList(PetProvider petProvider) {
                   ),
                 ],
               ),
-              onTap: () {
-                petProvider.editPet(index);
-                _showEditPetDialog(context, petProvider);
-              },
             ),
           );
         },
@@ -115,7 +108,6 @@ void _showEditPetDialog(BuildContext context, PetProvider petProvider) {
 
               final currentUser = auth.FirebaseAuth.instance.currentUser;
 
-              // 회원가입 중에 수정하는 경우 파이어베이스에 데이터가 없으므로 따로 에러처리 필요 구현중
               if (petProvider.currentPet.id != null &&
                   currentUser!.uid.isNotEmpty) {
                 try {
