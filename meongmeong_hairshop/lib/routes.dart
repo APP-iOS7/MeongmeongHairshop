@@ -6,6 +6,7 @@ import 'views/home/main_screen.dart';
 import 'views/auth/signup_pet_screen.dart';
 import 'views/auth/signup_user_screen.dart';
 import 'views/reservation/payment_screen.dart';
+import 'views/reservation/reservation_detail_screen.dart';
 import 'views/reservation/reservation_list_screen.dart';
 import 'views/reservation/reservation_screen.dart';
 
@@ -22,4 +23,6 @@ Map<String, Widget Function(BuildContext)> appRoutes = {
   '/reservation': (context) => ReservationScreen(),
   '/payment': (context) => PaymentScreen(),
   '/reservationList': (context) => ReservationListScreen(),
+  '/reservationDetail': (context) => ReservationDetailScreen(createdAt: ModalRoute.of(context)!.settings.arguments as String),
+  // '/success': (context) => ShopListScreen(),
 };

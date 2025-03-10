@@ -3,15 +3,16 @@ import 'package:intl/intl.dart';
 import 'package:meongmeong_hairshop/providers/reservation_provider.dart';
 import 'package:meongmeong_hairshop/providers/user_provider.dart';
 import 'package:meongmeong_hairshop/viewmodels/reservation_viewmodel.dart';
+import 'package:meongmeong_hairshop/views/home/main_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../auth/login_screen.dart';
+import 'payment_list_screen.dart';
 
 class PaymentScreen extends StatelessWidget {
   PaymentScreen({super.key});
 
   // firestore 연결
-  FirestoreService _firestoreService = FirestoreService();
+  ReservationFirestoreService _firestoreService = ReservationFirestoreService();
 
   @override
   Widget build(BuildContext context) {
@@ -146,20 +147,16 @@ class PaymentScreen extends StatelessWidget {
                       children: [
                         // userprovider에서 정보를 가져오는 부분
                         Text(reservationProvider.userName),
-                        Text("("),
-                        Text(reservationProvider.reservation.petName),
-                        Text(")"),
+                        Text("(${reservationProvider.reservation.petName})"),
                       ],
                     ),
+                    Text('(${userProvider.user!.phoneNumber})'), 
                     SizedBox(height: 20),
-
-                    Text(
-                      '결제 수단',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    
+                    Text('결제 수단', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                    PaymentListScreen(),
+                    
+                    SizedBox(height: 20,),
 
                     Container(
                       width: double.infinity,
@@ -167,24 +164,10 @@ class PaymentScreen extends StatelessWidget {
                       child: FloatingActionButton(
                         onPressed: () {
                           reservationProvider.setTotalFee(totalFee);
-                          if (reservationProvider
-                              .reservation
-                              .services
-                              .isNotEmpty) {
-                            _firestoreService.addReservation(
-                              reservationProvider.userName,
-                              reservationProvider.reservation.name,
-                              reservationProvider.reservation.openTime,
-                              reservationProvider.reservation.closeTime,
-                              reservationProvider.reservation.address,
-                              reservationProvider.reservation.date,
-                              reservationProvider.reservation.reservedTime,
-                              reservationProvider.reservation.designer,
-                              reservationProvider.position,
-                              reservationProvider.reservation.services,
-                              reservationProvider.reservation.petName,
-                              totalFee,
-                            );
+
+                          if(reservationProvider.reservation.services.isNotEmpty) {
+                            _firestoreService.addReservation(reservationProvider.userName,reservationProvider.reservation.name, reservationProvider.reservation.openTime, reservationProvider.reservation.closeTime, reservationProvider.reservation.address, reservationProvider.reservation.date, reservationProvider.reservation.reservedTime, reservationProvider.reservation.designer, reservationProvider.position,reservationProvider.reservation.services, reservationProvider.reservation.petName, totalFee, reservationProvider.paymentMethod, reservationProvider.phoneNumber);
+
                             reservationProvider.allReset();
 
                             // 홈(?)으로 돌아가기
@@ -192,7 +175,7 @@ class PaymentScreen extends StatelessWidget {
                             Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => LoginScreen(),
+                                builder: (context) => MainScreen(),
                               ),
                               (route) => false,
                             );

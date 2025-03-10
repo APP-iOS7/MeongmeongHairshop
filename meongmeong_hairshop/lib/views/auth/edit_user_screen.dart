@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meongmeong_hairshop/providers/user_provider.dart';
+import 'package:meongmeong_hairshop/viewmodels/reservation_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class EditUserScreen extends StatefulWidget {
@@ -99,10 +100,17 @@ class _EditUserScreenState extends State<EditUserScreen> {
 
   Future<void> _updateProfile() async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-
+    ReservationFirestoreService _firestoreService = ReservationFirestoreService();
     if (!_formKey.currentState!.validate()) {
       return;
     }
+
+    // 이름을 바꾸면 예약정보에서의 이름도 바꿔줘야함
+    _firestoreService.updateReservationByUserName(
+      userProvider.user!.username,
+      _phoneNumberController.text.trim(),
+      _usernameController.text.trim(),
+    );
 
     final result = await userProvider.updateUserData(
       username: _usernameController.text.trim(),

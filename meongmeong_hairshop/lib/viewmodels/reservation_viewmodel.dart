@@ -3,13 +3,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import '../models/reservation.dart';
 
-class FirestoreService {
+class ReservationFirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String collectionName = "reservations";
-
   // 데이터 추가 
-  Future<void> addReservation(String userName, String name, TimeOfDay openTime, TimeOfDay closeTime, String address, DateTime date, String reservedTime, String designer, String position, Set<String> services, String petName, int totalFee) async {
-    DateTime createdAt = DateTime.now();
+  Future<void> addReservation(String userName, String name, TimeOfDay openTime, TimeOfDay closeTime, String address, DateTime date, String reservedTime, String designer, String position, Set<String> services, String petName, int totalFee, String paymentMethod, String phoneNumber) async {
+    DateTime createdAt = DateTime.now(); // 예약 건들을 생성한 날짜로 구분하기 위해서
     try {
       await _firestore.collection(collectionName).doc(createdAt.toString()).set({
         'userName': userName,
@@ -24,6 +23,8 @@ class FirestoreService {
         'services': services.toList(),
         'petName': petName,
         'totalFee': totalFee,
+        'paymentMethod': paymentMethod,
+        'phoneNumber' : phoneNumber,
       });
       print("예약 추가 완료!");
     } catch (e) {
@@ -31,13 +32,14 @@ class FirestoreService {
     }
   }
 
-  // 데이터 불러오기
-  Future<List<Map<String, dynamic>>> getAllReservations() async {
+  // 전체 예약 불러오기
+  Future<List<Map<String, dynamic>>> getUserReservations(String userName) async {
   try {
-    QuerySnapshot snapshot = await _firestore.collection('reservations').get();
+    QuerySnapshot snapshot = await _firestore.collection('reservations').where('userName', isEqualTo: userName).get();
     
     List<Map<String, dynamic>> reservations = snapshot.docs.map((doc) {
       var data = doc.data() as Map<String, dynamic>; // Firestore 데이터 가져오기
+      var createdAt = doc.id; 
 
       return {
         'userName': data.containsKey('userName') ? data['userName'] : 'Unknown',
@@ -52,13 +54,121 @@ class FirestoreService {
         'services': data.containsKey('services') ? List<String>.from(data['services']) : [],
         'petName': data.containsKey('petName') ? data['petName'] : 'Unknown',
         'totalFee': data.containsKey('totalFee') ? data['totalFee'] : 0,
+        'createdAt': createdAt,
+        'paymentMethod': data.containsKey('paymentMethod') ? data['paymentMethod'] : '',
+        'phoneNumber' : data.containsKey('phoneNumber') ? data['phoneNumber'] : '',
       };
+      print("예약 불러오기 완료!");
     }).toList();
 
     return reservations; // 리스트 리턴
   } catch (e) {
     print("예약 데이터 가져오기 실패: $e");
     return []; // 실패 시 빈 리스트 리턴
+  } 
   }
-}
+
+  // 예약 하나 가져오기
+  Future<Map<String, dynamic>> getReservation(String createdAt) async {
+    try {
+      DocumentSnapshot snapshot = await _firestore.collection(collectionName).doc(createdAt).get();
+      
+      if (snapshot.exists) {
+        var data = snapshot.data() as Map<String, dynamic>; // Firestore 데이터 가져오기
+
+        return {
+          'userName': data.containsKey('userName') ? data['userName'] : 'Unknown',
+          'name': data.containsKey('name') ? data['name'] : 'Unknown',
+          'openTime': data.containsKey('openTime') ? data['openTime'] : {'hour': 0, 'minute': 0},
+          'closeTime': data.containsKey('closeTime') ? data['closeTime'] : {'hour': 0, 'minute': 0},
+          'address': data.containsKey('address') ? data['address'] : 'No Address',
+          'date': data.containsKey('date') ? (data['date'] as Timestamp).toDate() : DateTime.now(),
+          'reservedTime': data.containsKey('reservedTime') ? data['reservedTime'] : '',
+          'designer': data.containsKey('designer') ? data['designer'] : '',
+          'position': data.containsKey('position') ? data['position'] : '',
+          'services': data.containsKey('services') ? List<String>.from(data['services']) : [],
+          'petName': data.containsKey('petName') ? data['petName'] : 'Unknown',
+          'totalFee': data.containsKey('totalFee') ? data['totalFee'] : 0,
+          'paymentMethod': data.containsKey('paymentMethod') ? data['paymentMethod'] : '',
+          'phoneNumber' : data.containsKey('phoneNumber') ? data['phoneNumber'] : '',
+        };
+        print("예약 불러오기 완료!");
+      } else {
+        return {};
+      }
+    } catch (e) {
+      print("예약 데이터 가져오기 실패: $e");
+      return {}; // 실패 시 빈 리스트 리턴
+    }
+  }
+
+  // 예약 모두 가져오기
+  Future<List<Map<String, dynamic>>> getAllReservations() async {
+    try {
+      QuerySnapshot snapshot = await _firestore.collection(collectionName).get();
+      
+      List<Map<String, dynamic>> reservations = snapshot.docs.map((doc) {
+        var data = doc.data() as Map<String, dynamic>; // Firestore 데이터 가져오기
+        return {
+          'userName': data.containsKey('userName') ? data['userName'] : 'Unknown',
+          'name': data.containsKey('name') ? data['name'] : 'Unknown',
+          'openTime': data.containsKey('openTime') ? data['openTime'] : {'hour': 0, 'minute': 0},
+          'closeTime': data.containsKey('closeTime') ? data['closeTime'] : {'hour': 0, 'minute': 0},
+          'address': data.containsKey('address') ? data['address'] : 'No Address',
+          'date': data.containsKey('date') ? (data['date'] as Timestamp).toDate() : DateTime.now(),
+          'reservedTime': data.containsKey('reservedTime') ? data['reservedTime'] : '',
+          'designer': data.containsKey('designer') ? data['designer'] : '',
+          'position': data.containsKey('position') ? data['position'] : '',
+          'services': data.containsKey('services') ? List<String>.from(data['services']) : [],
+          'petName': data.containsKey('petName') ? data['petName'] : 'Unknown',
+          'totalFee': data.containsKey('totalFee') ? data['totalFee'] : 0,
+          'paymentMethod': data.containsKey('paymentMethod') ? data['paymentMethod'] : '',
+          'phoneNumber' : data.containsKey('phoneNumber') ? data['phoneNumber'] : '',
+        };
+        print("예약 불러오기 완료!");
+      }).toList();
+
+      return reservations; // 리스트 리턴
+    } catch (e) {
+      print("예약 데이터 가져오기 실패: $e");
+      return []; // 실패 시 빈 리스트 리턴
+    } 
+  }
+  // 예약 삭제
+  Future<void> deleteReservation(String createdAt) async {
+    try {
+      await _firestore.collection(collectionName).doc(createdAt).delete();
+      print("예약 삭제 완료! (ID: $createdAt)");
+    } catch (e) {
+      print("예약 삭제 실패: $e");
+    }
+  }
+
+  // 예약 수정(이름과 전화번호를 바꿈)
+  Future<void> updateReservationByUserName(String oldUserName, String newPhoneNumber, String newUserName) async {
+    try {
+      // Firestore에서 userName이 일치하는 문서 검색
+      QuerySnapshot snapshot = await _firestore
+          .collection(collectionName)
+          .where('userName', isEqualTo: oldUserName)
+          .get();
+
+      if (snapshot.docs.isEmpty) {
+        print("해당 userName을 가진 예약이 존재하지 않습니다.");
+        return;
+      }
+
+      // 여러 개의 문서가 있을 수 있으므로 모든 문서를 업데이트
+      for (var doc in snapshot.docs) {
+        await _firestore.collection(collectionName).doc(doc.id).update({
+          'userName': newUserName,
+          'phoneNumber': newPhoneNumber,
+          'updatedAt': Timestamp.now(), // 수정 시간 기록
+        });
+        print("예약 수정 완료! (ID: ${doc.id})");
+      }
+    } catch (e) {
+      print("예약 수정 실패: $e");
+    }
+  }
 }

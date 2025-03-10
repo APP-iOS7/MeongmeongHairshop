@@ -24,6 +24,13 @@ class ReservationProvider with ChangeNotifier {
   bool get isServicesSelected => _isServicesSelected; 
   bool get isPetSelected => _isPetSelected;
 
+  // 디자이너 이름 및 직책
+  List<String> _designers = ['김하준', '박민우', '박서윤', '이도현', '정민수'];
+  List<String> _positions = ['디자이너', '디자이너', '디자이너', '실장', '원장'];
+  // getter
+  List<String> get designers => _designers;
+  List<String> get positions => _positions;
+
   // 시술 메뉴 종류
   List<String> _services = ['스페셜컷','목욕 + 위생미용(소)','목욕 + 위생미용(중)' , '목욕 + 위생미용(대)','목욕(소)', '목욕(중)', '목욕(대)'];
   // 시술 가격
@@ -40,6 +47,16 @@ class ReservationProvider with ChangeNotifier {
   int get totalFee => _totalFee;
   String get position => _position;
 
+  // 결제 방식
+  String _paymentMethod = '무통장 입금';
+  // getter
+  String get paymentMethod => _paymentMethod;
+
+  // 전화번호
+  String _phoneNumber = '';
+  // getter
+  String get phoneNumber => _phoneNumber;
+
   // 모든 정보 리셋
   void allReset() {
     _reservation = Reservation(name: '', address: '', openTime: TimeOfDay.now(), closeTime: TimeOfDay.now(), date: DateTime.now(), reservedTime: '', designer: '', services: {}, petName: '');
@@ -51,6 +68,8 @@ class ReservationProvider with ChangeNotifier {
     _isPetSelected = false;
     _totalFee = 0;
     _position = '';
+    _paymentMethod = '무통장 입금';
+    _phoneNumber = '';
     notifyListeners();
   }
   void updateName(String name) {
@@ -135,6 +154,16 @@ class ReservationProvider with ChangeNotifier {
 
   void setPosition(String position) {
     _position = position;
+    notifyListeners();
+  }
+
+  void setPaymentMethod(String paymentMethod) {
+    _paymentMethod = paymentMethod;
+    notifyListeners();
+  }
+
+  void setPhoneNumber(String phoneNumber) {
+    _phoneNumber = phoneNumber;
     notifyListeners();
   }
 }

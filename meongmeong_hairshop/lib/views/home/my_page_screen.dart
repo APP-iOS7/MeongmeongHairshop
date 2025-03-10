@@ -26,7 +26,9 @@ class MyPageScreen extends StatelessWidget {
               onPressed: () => Navigator.pushNamed(context, '/managePet'),
               child: Text('반려 동물 관리'),
             ),
-            TextButton(onPressed: () {}, child: Text('예약 내역')),
+            TextButton(onPressed: () {
+              Navigator.pushNamed(context, '/reservationList');
+            }, child: Text('예약 내역')),
             TextButton(
               onPressed: () => _showLogoutConfirmationDialog(context),
               child: Text('로그아웃'),

@@ -10,18 +10,19 @@ class DesignerScreen extends StatefulWidget {
 }
 
 class _DesignerScreenState extends State<DesignerScreen> {
-  List<String> designers = ['김하준', '박민우', '박서윤', '이도현', '정민수'];
-  List<String> positions = ['디자이너', '디자이너', '디자이너', '실장', '원장'];
+  
   int? selectedIndex; // 선택된 디자이너의 인덱스
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ReservationProvider>(
         builder: (context, provider, child) {
+        List<String> designers = provider.designers;
+        List<String> positions = provider.positions;       
+        
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(padding: EdgeInsets.all(5)),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal, // 가로 스크롤
               child: Row(
