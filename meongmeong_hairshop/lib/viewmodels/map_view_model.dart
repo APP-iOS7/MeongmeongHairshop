@@ -17,9 +17,6 @@ class MapViewModel with ChangeNotifier {
   // 로딩 상태
   bool _isLoading = false;
   bool get isLoading => _isLoading;
-  
-  bool _suppressApiOnCameraIdle = false;
-  bool get suppressApiOnCameraIdle => _suppressApiOnCameraIdle;
 
   // 현재 위치
   Position? currentPosition;
@@ -122,7 +119,6 @@ class MapViewModel with ChangeNotifier {
         mapController.nowCameraPosition,
       );
       _salons = salonData;
-      notifyListeners();
       print('펫미용실 리스트: $_salons');
     } catch (e) {
       print('검색 오류: $e');

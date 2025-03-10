@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../viewmodels/signup_viewmodel.dart';
-import '../models/user.dart';
-import '../models/pet.dart';
-import '../models/salon.dart';
-import '../models/reservation.dart';
 
 class SignupScreen extends StatelessWidget {
   const SignupScreen({super.key});
