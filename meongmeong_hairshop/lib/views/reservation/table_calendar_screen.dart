@@ -28,6 +28,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
               firstDay: DateTime.utc(2021, 10, 16),
               lastDay: DateTime.utc(2030, 3, 14),
               focusedDay: _focusedDay,
+              daysOfWeekHeight: 20,
               selectedDayPredicate: (day) {
                 return isSameDay(_selectedDay, day);
               },
@@ -52,7 +53,6 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                   borderRadius: BorderRadius.all(
                     Radius.circular(10),
                   ),
-
                 ),
               ),
               
@@ -83,7 +83,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
                   return Center(
                     child: Text(
                       date.day.toString(),
-                      style: const TextStyle(color: Colors.black), 
+                      style: TextStyle(color: (date.weekday == DateTime.sunday) ?Colors.red : Colors.black), 
                     ),
                   );
                 },

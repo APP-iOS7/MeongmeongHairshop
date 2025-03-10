@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: buildLightTheme(),
-      initialRoute: '/login',
+      initialRoute: '/reservation',
       routes: appRoutes, // routes 파일에서 정의한 경로 사용
     );
   }

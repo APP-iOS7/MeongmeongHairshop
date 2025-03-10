@@ -12,7 +12,7 @@ class PaymentScreen extends StatelessWidget {
   PaymentScreen({super.key});
 
   // firestore 연결
-  FirestoreService _firestoreService = FirestoreService();
+  ReservationFirestoreService _firestoreService = ReservationFirestoreService();
 
   @override
   Widget build(BuildContext context) {
