@@ -22,12 +22,42 @@ class MyPageScreen extends StatelessWidget {
             ),
             TextButton(onPressed: () {}, child: Text('반려 동물 관리')),
             TextButton(onPressed: () {}, child: Text('예약 내역')),
-            TextButton(onPressed: () => signOut(context), child: Text('로그아웃')),
+            TextButton(
+              onPressed: () => _showLogoutConfirmationDialog(context),
+              child: Text('로그아웃'),
+            ),
           ],
         ),
       ),
     );
   }
+}
+
+void _showLogoutConfirmationDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('로그아웃'),
+        content: Text('정말 로그아웃 하시겠습니까?'),
+        actionsAlignment: MainAxisAlignment.spaceBetween,
+        actionsPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('취소'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              signOut(context);
+            },
+            child: Text('로그아웃'),
+          ),
+        ],
+      );
+    },
+  );
 }
 
 Widget _buildProfile(BuildContext context) {
