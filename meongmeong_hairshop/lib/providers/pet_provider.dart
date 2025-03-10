@@ -1,15 +1,23 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import '../models/pet.dart';
 
 class PetProvider with ChangeNotifier {
-  late List<Pet> _pets;
+  List<Pet> _pets = [];
   Pet _currentPet = Pet(name: '', breed: '', ageMonths: 0);
 
   bool _isPetAgeNum = true;
+  bool _isLoading = false;
+  // 편집모드 플래그
+  bool _isEditMode = false;
+  int _editingIndex = -1;
 
   List<Pet> get pets => _pets;
   Pet get currentPet => _currentPet; // 사용자가 편집중인 펫 인스턴스를 구분하기 위함
   bool get isPetAgeNum => _isPetAgeNum;
+  bool get isLoading => _isLoading;
+  bool get isEditMode => _isEditMode;
+  int get editingIndex => _editingIndex;
 
   void updatePetName(String name) {
     _currentPet.name = name;
@@ -55,10 +63,141 @@ class PetProvider with ChangeNotifier {
     }
   }
 
+  void editPet(int index) {
+    if (index >= 0 && index < _pets.length) {
+      _currentPet = Pet(
+        id: _pets[index].id,
+        name: _pets[index].name,
+        breed: _pets[index].breed,
+        ageMonths: _pets[index].ageMonths,
+      );
+      _isEditMode = true;
+      _editingIndex = index;
+      notifyListeners();
+    }
+  }
+
+  void updatePet() {
+    if (_editingIndex >= 0 &&
+        _editingIndex < _pets.length &&
+        _currentPet.name.isNotEmpty &&
+        _currentPet.breed.isNotEmpty &&
+        _currentPet.ageMonths > 0) {
+      _pets[_editingIndex] = Pet(
+        id: _currentPet.id,
+        name: _currentPet.name,
+        breed: _currentPet.breed,
+        ageMonths: _currentPet.ageMonths,
+      );
+
+      // 편집 모드 종료 및 초기화
+      _isEditMode = false;
+      _editingIndex = -1;
+      _currentPet = Pet(name: '', breed: '', ageMonths: 0);
+      notifyListeners();
+    }
+  }
+
+  void cancelEdit() {
+    _isEditMode = false;
+    _editingIndex = -1;
+    _currentPet = Pet(name: '', breed: '', ageMonths: 0);
+    notifyListeners();
+  }
+
   void removePet(int index) {
     if (index >= 0 && index < _pets.length) {
       _pets.removeAt(index);
       notifyListeners();
     }
+  }
+
+  Future<void> savePetsToFirestore(String userId) async {
+    try {
+      final userDocRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId);
+      final batch = FirebaseFirestore.instance.batch();
+
+      for (var pet in _pets) {
+        final petDocRef = userDocRef.collection('pets').doc();
+        batch.set(petDocRef, pet.toFirestore());
+      }
+
+      await batch.commit();
+    } catch (e) {
+      debugPrint('Error saving pets to Firestore: $e');
+    }
+  }
+
+  Future<void> fetchPetsFromFirestore(String userId) async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      _pets = [];
+
+      final petsCollection = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('pets')
+          .orderBy('createdAt', descending: false); // 생성 시간순 정렬
+
+      final querySnapshot = await petsCollection.get();
+
+      for (var doc in querySnapshot.docs) {
+        final data = doc.data();
+        _pets.add(
+          Pet(
+            id: doc.id,
+            name: data['name'] ?? '',
+            breed: data['breed'] ?? '',
+            ageMonths: data['ageMonths'] ?? 0,
+          ),
+        );
+      }
+
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      _isLoading = false;
+      debugPrint('Error fetching pets from Firestore: $e');
+      notifyListeners();
+      throw e;
+    }
+  }
+
+  Future<void> deletePetFromFirestore(String userId, String petId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('pets')
+          .doc(petId)
+          .delete();
+    } catch (e) {
+      debugPrint('Error deleting pet from Firestore: $e');
+    }
+  }
+
+  Future<void> updatePetInFirestore(String userId, String petId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('pets')
+          .doc(petId)
+          .update(_currentPet.toFirestore());
+    } catch (e) {
+      debugPrint('Error updating pet in Firestore: $e');
+    }
+  }
+
+  // 회원가입 완료 후 모든 상태 리셋
+  void resetAll() {
+    _pets = [];
+    _currentPet = Pet(name: '', breed: '', ageMonths: 0);
+    _isPetAgeNum = true;
+    notifyListeners();
   }
 }

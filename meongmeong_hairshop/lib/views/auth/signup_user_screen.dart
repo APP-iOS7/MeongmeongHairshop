@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:meongmeong_hairshop/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../viewmodels/signup_viewmodel.dart';
+class SignupUserScreen extends StatefulWidget {
+  const SignupUserScreen({Key? key}) : super(key: key);
 
-class SignupUserScreen extends StatelessWidget {
-  SignupUserScreen({super.key});
+  @override
+  State<SignupUserScreen> createState() => _SignupUserScreenState();
+}
 
+class _SignupUserScreenState extends State<SignupUserScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -14,6 +17,26 @@ class SignupUserScreen extends StatelessWidget {
       TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
+
+  bool _passwordMatch = true;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _userNameController.dispose();
+    _phoneNumberController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<UserProvider>(context, listen: false).initNewUser();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +114,12 @@ class SignupUserScreen extends StatelessWidget {
             if (value!.length < 6) return '비밀번호는 최소 6자 이상이어야 합니다';
             return null;
           },
-          onChanged: (value) => userProvider.updatePassword(value),
+          onChanged: (value) {
+            setState(() {
+              _passwordMatch =
+                  _passwordController.text == _confirmPasswordController.text;
+            });
+          },
         );
       },
     );
@@ -104,11 +132,16 @@ class SignupUserScreen extends StatelessWidget {
           controller: _confirmPasswordController,
           decoration: InputDecoration(
             labelText: '비밀번호 확인',
-            errorText: userProvider.passwordMatch ? null : '비밀번호가 일치하지 않습니다.',
+            errorText: _passwordMatch ? null : '비밀번호가 일치하지 않습니다.',
           ),
           obscureText: true,
           validator: (value) => value?.isEmpty ?? true ? '패스워드를 확인해주세요' : null,
-          onChanged: (value) => userProvider.updateConfirmPassword(value),
+          onChanged: (value) {
+            setState(() {
+              _passwordMatch =
+                  _passwordController.text == _confirmPasswordController.text;
+            });
+          },
         );
       },
     );
@@ -139,5 +172,22 @@ class SignupUserScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  bool validateUserInfo(BuildContext context, GlobalKey<FormState> formKey) {
+    if (formKey.currentState?.validate() ?? false) {
+      if (!_passwordMatch) {
+        return false;
+      }
+
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      userProvider.updateEmail(_emailController.text);
+      userProvider.updateUsername(_userNameController.text);
+      userProvider.updatePhoneNumber(_phoneNumberController.text);
+      userProvider.updatePassword(_passwordController.text);
+
+      return true;
+    }
+    return false;
   }
 }
