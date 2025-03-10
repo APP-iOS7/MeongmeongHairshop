@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:meongmeong_hairshop/config/app_styles.dart';
 import 'package:provider/provider.dart';
-import '../../models/pet.dart';
 import '../../providers/pet_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../viewmodels/signup_viewmodel.dart';
+import '../../widgets/display_pet_list.dart';
 
 class SignupPetScreen extends StatelessWidget {
   SignupPetScreen({super.key});
@@ -37,7 +36,7 @@ class SignupPetScreen extends StatelessWidget {
 
             SizedBox(height: 16),
 
-            if (petProvider.pets.isNotEmpty) _buildPetList(petProvider),
+            if (petProvider.pets.isNotEmpty) buildPetList(petProvider),
 
             SizedBox(height: 16),
 
@@ -79,44 +78,6 @@ class SignupPetScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildPetList(PetProvider petProvider) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '등록된 반려동물',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-        ),
-        SizedBox(height: 8),
-        ListView.builder(
-          shrinkWrap: true, // 리스트뷰가 내용에 맞게 크기 조절
-          physics: NeverScrollableScrollPhysics(), // 내부 스크롤 비활성화
-          itemCount: petProvider.pets.length,
-          itemBuilder: (context, index) {
-            Pet pet = petProvider.pets[index];
-            return Card(
-              margin: EdgeInsets.only(bottom: 8),
-              child: ListTile(
-                title: Text(
-                  pet.name,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(
-                  '${pet.breed}, ${pet.ageMonths}개월',
-                  style: TextStyle(color: Colors.grey[700]),
-                ),
-                trailing: IconButton(
-                  icon: Icon(Icons.cancel, color: AppColors.textMedium),
-                  onPressed: () => petProvider.removePet(index),
-                ),
-              ),
-            );
-          },
-        ),
-      ],
     );
   }
 
