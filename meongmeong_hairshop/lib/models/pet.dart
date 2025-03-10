@@ -1,7 +1,7 @@
 class Pet {
-  final String name;
-  final String breed;
-  final int ageMonths;
+   String name;
+   String breed;
+   int ageMonths;
 
   Pet({
     required this.name,

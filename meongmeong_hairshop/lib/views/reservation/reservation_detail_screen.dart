@@ -89,7 +89,7 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
                       Row(
                         children: [
                           Text('디자이너   ', style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text('${snapshot.data!['designer']} (${snapshot.data!['position']})'),
+                          Text('${snapshot.data!['designer']} ${snapshot.data!['position']}'),
                         ],
                       ),
                       SizedBox(height: 10),
@@ -103,7 +103,7 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
                       Row(
                         children: [
                           Text('금액   ', style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text('${snapshot.data!['totalFee']} 원'),
+                          Text('${snapshot.data!['totalFee']} 원 (${snapshot.data!['paymentMethod']})'),
                         ],
                       ),
                       SizedBox(height: 30),

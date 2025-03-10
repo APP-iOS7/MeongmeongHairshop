@@ -6,6 +6,8 @@ import 'package:meongmeong_hairshop/viewmodels/reservation_viewmodel.dart';
 import 'package:meongmeong_hairshop/views/login_screen.dart';
 import 'package:provider/provider.dart';
 
+import 'payment_list_screen.dart';
+
 
 class PaymentScreen extends StatelessWidget {
   
@@ -126,7 +128,10 @@ class PaymentScreen extends StatelessWidget {
                     SizedBox(height: 20),
                     
                     Text('결제 수단', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-          
+                    PaymentListScreen(),
+                    
+                    SizedBox(height: 20,),
+
                     Container(
                       width: double.infinity,
                       height: 70,
@@ -134,7 +139,7 @@ class PaymentScreen extends StatelessWidget {
                         onPressed: () {
                           reservationProvider.setTotalFee(totalFee);
                           if(reservationProvider.reservation.services.isNotEmpty) {
-                            _firestoreService.addReservation(reservationProvider.userName,reservationProvider.reservation.name, reservationProvider.reservation.openTime, reservationProvider.reservation.closeTime, reservationProvider.reservation.address, reservationProvider.reservation.date, reservationProvider.reservation.reservedTime, reservationProvider.reservation.designer, reservationProvider.position,reservationProvider.reservation.services, reservationProvider.reservation.petName, totalFee);
+                            _firestoreService.addReservation(reservationProvider.userName,reservationProvider.reservation.name, reservationProvider.reservation.openTime, reservationProvider.reservation.closeTime, reservationProvider.reservation.address, reservationProvider.reservation.date, reservationProvider.reservation.reservedTime, reservationProvider.reservation.designer, reservationProvider.position,reservationProvider.reservation.services, reservationProvider.reservation.petName, totalFee, reservationProvider.paymentMethod);
                             reservationProvider.allReset();
                             
                             // 홈(?)으로 돌아가기

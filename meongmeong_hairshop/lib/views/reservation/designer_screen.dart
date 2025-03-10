@@ -21,7 +21,6 @@ class _DesignerScreenState extends State<DesignerScreen> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(padding: EdgeInsets.all(5)),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal, // 가로 스크롤
               child: Row(

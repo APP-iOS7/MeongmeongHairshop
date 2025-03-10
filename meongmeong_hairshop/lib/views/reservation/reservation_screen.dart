@@ -82,12 +82,12 @@ class ReservationScreen extends StatelessWidget {
                         // 디자이너 선택
                         Text('2. 디자이너를 선택해주세요.', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                         DesignerScreen(),
-                        SizedBox(height: 30),
+                        SizedBox(height: 20),
                         
                         // 시술 선택
                         Text('3. 시술 메뉴를 선택해주세요.',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                         ServiceSelection(),
-                        SizedBox(height: 30),
+                        SizedBox(height: 20),
                   
                         // 시술 받을 강아지 선택
                         Text('4. 시술 받을 강아지를 선택해주세요.', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),

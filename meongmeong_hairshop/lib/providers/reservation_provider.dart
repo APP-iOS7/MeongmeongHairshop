@@ -40,6 +40,11 @@ class ReservationProvider with ChangeNotifier {
   int get totalFee => _totalFee;
   String get position => _position;
 
+  // 결제 방식
+  String _paymentMethod = '무통장 입금';
+  // getter
+  String get paymentMethod => _paymentMethod;
+
   // 모든 정보 리셋
   void allReset() {
     _reservation = Reservation(name: '', address: '', openTime: TimeOfDay.now(), closeTime: TimeOfDay.now(), date: DateTime.now(), reservedTime: '', designer: '', services: {}, petName: '');
@@ -51,6 +56,7 @@ class ReservationProvider with ChangeNotifier {
     _isPetSelected = false;
     _totalFee = 0;
     _position = '';
+    _paymentMethod = '무통장 입금';
     notifyListeners();
   }
   void updateName(String name) {
@@ -135,6 +141,11 @@ class ReservationProvider with ChangeNotifier {
 
   void setPosition(String position) {
     _position = position;
+    notifyListeners();
+  }
+
+  void setPaymentMethod(String paymentMethod) {
+    _paymentMethod = paymentMethod;
     notifyListeners();
   }
 }
