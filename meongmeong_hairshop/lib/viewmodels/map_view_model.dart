@@ -5,6 +5,7 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 import '../models/salon.dart';
 
 class MapViewModel with ChangeNotifier {
@@ -26,7 +27,10 @@ class MapViewModel with ChangeNotifier {
   }
 
   /// 네이버 로컬 API 호출하여 살롱 검색
-  Future<List<Salon>> fetchSalons(String query, NCameraPosition position) async {
+  Future<List<Salon>> fetchSalons(
+    String query,
+    NCameraPosition position,
+  ) async {
     List<Placemark> placemarks = await placemarkFromCoordinates(
       position.target.latitude,
       position.target.longitude,
@@ -34,30 +38,27 @@ class MapViewModel with ChangeNotifier {
     String location =
         placemarks.isNotEmpty ? placemarks.first.locality ?? '' : '';
 
-    if (location.isEmpty) {
-      print("주소를 찾을 수 없습니다.");
-      return [];
-    }
+    // if (location.isEmpty) {
+    //   print("주소를 찾을 수 없습니다.");
+    //   return [];
+    // }
     // 위치 기반 검색을 위해 지역명 포함
-    final encodedQuery = Uri.encodeComponent('$query $location');
-
-    final url = Uri.parse(
-      'https://openapi.naver.com/v1/search/local.json?query=$encodedQuery&display=5',
-    );
-
-    print('API 요청: $url');
-
-    final response = await http.get(
-      url,
-      headers: {
-        'X-Naver-Client-Id': 'M9eZROGKhyCts939lvwq',
-        'X-Naver-Client-Secret': '5NiRFDHjvb',
-      },
-    );
+    http.Response response = await fetchPlaceWithLocation(query, location);
 
     if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      print(data);
+      var data = json.decode(response.body);
+      print(data['items']);
+
+      if (data['items'].isEmpty || data['items'] == null) {
+        http.Response response = await fetchPlaceWithLocation(query);
+        if (response.statusCode == 200) {
+          data = json.decode(response.body);
+          print(data['items']);
+        } else {
+          print('API 호출 실패: ${response.statusCode}');
+          return [];
+        }
+      }
       final List<dynamic> places = data['items'] ?? [];
 
       // Salon 모델 리스트로 변환
@@ -87,6 +88,25 @@ class MapViewModel with ChangeNotifier {
     }
   }
 
+  Future<http.Response> fetchPlaceWithLocation(String query, [String location = '']) async {
+    final encodedQuery = Uri.encodeComponent('$query $location');
+
+    final url = Uri.parse(
+      'https://openapi.naver.com/v1/search/local.json?query=$encodedQuery&display=5',
+    );
+
+    print('API 요청: $url');
+
+    final response = await http.get(
+      url,
+      headers: {
+        'X-Naver-Client-Id': 'M9eZROGKhyCts939lvwq',
+        'X-Naver-Client-Secret': '5NiRFDHjvb',
+      },
+    );
+    return response;
+  }
+
   /// 살롱 데이터 검색
   Future<void> fetchPetSalonData(String query) async {
     _isLoading = true;
@@ -106,6 +126,15 @@ class MapViewModel with ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  Future<void> openLink(Salon salon) async {
+    final Uri url = Uri.parse(salon.link);
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch ${salon.link}';
+    }
   }
 
   /// 현재 위치 가져오기

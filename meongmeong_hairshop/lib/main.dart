@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: '애견 미용실 지도',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        // primarySwatch: Colors.blue,
       ),
       home: ChangeNotifierProvider(
         create: (context) => MapViewModel(),
