@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // 주요 브랜드 색상
-  static const Color primary = Color.fromARGB(255, 231, 224, 235);
+  static const Color primary = Colors.green;
   static const Color secondary = Color(0xFFFF9100);
   static const Color accent = Color(0xFF00BFA5);
 

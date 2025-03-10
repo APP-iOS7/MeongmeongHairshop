@@ -26,7 +26,7 @@ class _ReservationListScreenState extends State<ReservationListScreen> {
     Future<void> fetchReservations() async {
       final userProvider = context.read<UserProvider>();
       setState(() {
-        _reservations = _firestoreService.getUserReservations(userProvider.user.username);
+        _reservations = _firestoreService.getUserReservations(userProvider.user!.username);
       });
     }
   @override
@@ -55,7 +55,7 @@ class _ReservationListScreenState extends State<ReservationListScreen> {
                     return ListView.builder(
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
-                        if (snapshot.data![index]['userName'] == userProvider.user.username) {
+                        if (snapshot.data![index]['userName'] == userProvider.user!.username) {
                         return Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: ListTile(
