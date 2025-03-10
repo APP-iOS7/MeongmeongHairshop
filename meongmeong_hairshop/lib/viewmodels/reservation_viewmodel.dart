@@ -143,4 +143,32 @@ class ReservationFirestoreService {
       print("예약 삭제 실패: $e");
     }
   }
+
+  // 예약 수정(이름과 전화번호를 바꿈)
+  Future<void> updateReservationByUserName(String oldUserName, String newPhoneNumber, String newUserName) async {
+    try {
+      // Firestore에서 userName이 일치하는 문서 검색
+      QuerySnapshot snapshot = await _firestore
+          .collection(collectionName)
+          .where('userName', isEqualTo: oldUserName)
+          .get();
+
+      if (snapshot.docs.isEmpty) {
+        print("해당 userName을 가진 예약이 존재하지 않습니다.");
+        return;
+      }
+
+      // 여러 개의 문서가 있을 수 있으므로 모든 문서를 업데이트
+      for (var doc in snapshot.docs) {
+        await _firestore.collection(collectionName).doc(doc.id).update({
+          'userName': newUserName,
+          'phoneNumber': newPhoneNumber,
+          'updatedAt': Timestamp.now(), // 수정 시간 기록
+        });
+        print("예약 수정 완료! (ID: ${doc.id})");
+      }
+    } catch (e) {
+      print("예약 수정 실패: $e");
+    }
+  }
 }
