@@ -41,6 +41,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.2"
+  cloud_firestore:
+    dependency: "direct main"
+    description:
+      name: cloud_firestore
+      sha256: "6b5d0ca6b62830ca5bcf98c5e0c882df32dea3cb523b635db3626333e1c29090"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.6.5"
+  cloud_firestore_platform_interface:
+    dependency: transitive
+    description:
+      name: cloud_firestore_platform_interface
+      sha256: "149c7d2d634178aff8e25eba6cbbbc76bd92f37e0e63727a31952c72bbcb77fb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.6.5"
+  cloud_firestore_web:
+    dependency: transitive
+    description:
+      name: cloud_firestore_web
+      sha256: "05a3c02a7edb3fadeb3f14f491c3a0bbad3ea2c9f22842acbf1d73bceeb93e77"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.4.5"
   collection:
     dependency: transitive
     description:
@@ -144,6 +168,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
+  intl:
+    dependency: "direct main"
+    description:
+      name: intl
+      sha256: "3df61194eb431efc39c4ceba583b95633a403f46c9fd341e550ce0bfa50e9aa5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.20.2"
   leak_tracker:
     dependency: transitive
     description:
@@ -232,6 +264,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.2"
+  simple_gesture_detector:
+    dependency: transitive
+    description:
+      name: simple_gesture_detector
+      sha256: ba2cd5af24ff20a0b8d609cec3f40e5b0744d2a71804a2616ae086b9c19d19a3
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -269,6 +309,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
+  table_calendar:
+    dependency: "direct main"
+    description:
+      name: table_calendar
+      sha256: "0c0c6219878b363a2d5f40c7afb159d845f253d061dc3c822aa0d5fe0f721982"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.0"
   term_glyph:
     dependency: transitive
     description:
