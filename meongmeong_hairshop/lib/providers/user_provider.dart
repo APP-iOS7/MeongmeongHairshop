@@ -7,7 +7,6 @@ class UserProvider with ChangeNotifier {
   User? _user;
 
   String _password = '';
-  String _confirmPassword = '';
   bool _passwordMatch = true;
   bool _isLoading = false;
   String? _error;
@@ -21,7 +20,6 @@ class UserProvider with ChangeNotifier {
   void initNewUser() {
     _user = User(email: '', username: '', phoneNumber: '');
     _password = '';
-    _confirmPassword = '';
     _passwordMatch = true;
     _error = null;
     notifyListeners();
@@ -34,13 +32,6 @@ class UserProvider with ChangeNotifier {
 
   void updatePassword(String password) {
     _password = password;
-    _checkPasswordMatch(password, _confirmPassword);
-    notifyListeners();
-  }
-
-  void updateConfirmPassword(String confirmPassword) {
-    _confirmPassword = confirmPassword;
-    _checkPasswordMatch(_password, confirmPassword);
     notifyListeners();
   }
 
@@ -52,15 +43,6 @@ class UserProvider with ChangeNotifier {
   void updatePhoneNumber(String phoneNumber) {
     _user?.phoneNumber = phoneNumber;
     notifyListeners();
-  }
-
-  // 비밀번호가 일치하는지 확인하는 함수
-  void _checkPasswordMatch(String password, String confirmPassword) {
-    if (password == confirmPassword) {
-      _passwordMatch = true;
-    } else {
-      _passwordMatch = false;
-    }
   }
 
   /* User 데이터를 파이어스토에서 로드

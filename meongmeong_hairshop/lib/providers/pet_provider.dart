@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../models/pet.dart';
 
 class PetProvider with ChangeNotifier {
-  late List<Pet> _pets;
+  List<Pet> _pets = [];
   Pet _currentPet = Pet(name: '', breed: '', ageMonths: 0);
 
   bool _isPetAgeNum = true;

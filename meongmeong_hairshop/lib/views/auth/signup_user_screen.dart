@@ -184,6 +184,7 @@ class _SignupUserScreenState extends State<SignupUserScreen> {
       userProvider.updateEmail(_emailController.text);
       userProvider.updateUsername(_userNameController.text);
       userProvider.updatePhoneNumber(_phoneNumberController.text);
+      userProvider.updatePassword(_passwordController.text);
 
       return true;
     }

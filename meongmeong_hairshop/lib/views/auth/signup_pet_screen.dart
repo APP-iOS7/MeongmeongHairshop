@@ -6,25 +6,12 @@ import '../../providers/pet_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../viewmodels/signup_viewmodel.dart';
 
-class SignupPetScreen extends StatefulWidget {
-  const SignupPetScreen({super.key});
+class SignupPetScreen extends StatelessWidget {
+  SignupPetScreen({super.key});
 
-  @override
-  State<SignupPetScreen> createState() => _SignupPetScreenState();
-}
-
-class _SignupPetScreenState extends State<SignupPetScreen> {
   final TextEditingController _petNameController = TextEditingController();
   final TextEditingController _petBreedController = TextEditingController();
   final TextEditingController _petAgeMonthController = TextEditingController();
-
-  @override
-  void dispose() {
-    _petNameController.dispose();
-    _petBreedController.dispose();
-    _petAgeMonthController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,13 +41,30 @@ class _SignupPetScreenState extends State<SignupPetScreen> {
 
             SizedBox(height: 16),
 
-            _buildPetNameField(petProvider),
-            _buildPetBreedField(petProvider),
-            _buildPetAgeField(petProvider),
-
-            SizedBox(height: 16),
-
-            _buildAddPetButton(context, petProvider),
+            Card(
+              elevation: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '새 반려동물 추가',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 12),
+                    _buildPetNameField(petProvider),
+                    _buildPetBreedField(petProvider),
+                    _buildPetAgeField(petProvider),
+                    SizedBox(height: 16),
+                    _buildAddPetButton(context, petProvider),
+                  ],
+                ),
+              ),
+            ),
 
             SizedBox(height: 24),
 
@@ -78,28 +82,41 @@ class _SignupPetScreenState extends State<SignupPetScreen> {
     );
   }
 
-  // 반려동물 목록
   Widget _buildPetList(PetProvider petProvider) {
-    return Container(
-      height: 120,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: ListView.builder(
-        itemCount: petProvider.pets.length,
-        itemBuilder: (context, index) {
-          Pet pet = petProvider.pets[index];
-          return ListTile(
-            title: Text(pet.name),
-            subtitle: Text('${pet.breed}, ${pet.ageMonths}개월'),
-            trailing: IconButton(
-              icon: Icon(Icons.cancel, color: AppColors.textMedium),
-              onPressed: () => petProvider.removePet(index),
-            ),
-          );
-        },
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '등록된 반려동물',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
+        SizedBox(height: 8),
+        ListView.builder(
+          shrinkWrap: true, // 리스트뷰가 내용에 맞게 크기 조절
+          physics: NeverScrollableScrollPhysics(), // 내부 스크롤 비활성화
+          itemCount: petProvider.pets.length,
+          itemBuilder: (context, index) {
+            Pet pet = petProvider.pets[index];
+            return Card(
+              margin: EdgeInsets.only(bottom: 8),
+              child: ListTile(
+                title: Text(
+                  pet.name,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(
+                  '${pet.breed}, ${pet.ageMonths}개월',
+                  style: TextStyle(color: Colors.grey[700]),
+                ),
+                trailing: IconButton(
+                  icon: Icon(Icons.cancel, color: AppColors.textMedium),
+                  onPressed: () => petProvider.removePet(index),
+                ),
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 
@@ -144,26 +161,29 @@ class _SignupPetScreenState extends State<SignupPetScreen> {
   }
 
   Widget _buildAddPetButton(BuildContext context, PetProvider petProvider) {
-    return ElevatedButton.icon(
-      onPressed: () {
-        if (_petNameController.text.isNotEmpty &&
-            _petBreedController.text.isNotEmpty &&
-            _petAgeMonthController.text.isNotEmpty) {
-          petProvider.addPet();
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton.icon(
+        onPressed: () {
+          if (_petNameController.text.isNotEmpty &&
+              _petBreedController.text.isNotEmpty &&
+              _petAgeMonthController.text.isNotEmpty) {
+            petProvider.addPet();
 
-          // 폼 초기화
-          _petNameController.clear();
-          _petBreedController.clear();
-          _petAgeMonthController.clear();
-        } else {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('반려동물 정보를 모두 입력해주세요')));
-        }
-      },
-      icon: Icon(Icons.pets),
-      label: Text('반려동물 추가'),
-      style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            // 폼 초기화
+            _petNameController.clear();
+            _petBreedController.clear();
+            _petAgeMonthController.clear();
+          } else {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('반려동물 정보를 모두 입력해주세요')));
+          }
+        },
+        icon: Icon(Icons.pets),
+        label: Text('반려동물 추가'),
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+      ),
     );
   }
 }
