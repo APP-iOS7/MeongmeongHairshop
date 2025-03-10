@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:meongmeong_hairshop/models/reservation.dart';
 import 'package:meongmeong_hairshop/providers/reservation_provider.dart';
 import 'package:meongmeong_hairshop/providers/user_provider.dart';
 import 'package:meongmeong_hairshop/views/reservation/designer_screen.dart';
@@ -11,16 +12,35 @@ import 'package:table_calendar/table_calendar.dart';
 import 'table_calendar_screen.dart';
 import 'timeslot_screen.dart';
 
-class ReservationScreen extends StatelessWidget {
+class ReservationScreen extends StatefulWidget {
 
+
+  ReservationScreen({super.key});
+
+  @override
+  State<ReservationScreen> createState() => _ReservationScreenState();
+}
+
+class _ReservationScreenState extends State<ReservationScreen> {
   // 더미데이터
   String name = '살롱드위드멍';
-  TimeOfDay openTime = TimeOfDay(hour: 12, minute: 0);
+  TimeOfDay openTime = TimeOfDay(hour: 15, minute: 0);
   TimeOfDay closeTime = TimeOfDay(hour: 21, minute: 0);
   String address = '서울특별시 송파구 가락로 98 4층';
 
-  ReservationScreen({super.key});
-  
+  @override
+  void initState() {
+    super.initState();
+    // 예약 정보를 Provider에 초기화 (initState에서 한 번만 실행)
+    Future.microtask(() {
+      final provider = Provider.of<ReservationProvider>(context, listen: false);
+      provider.updateName(name);
+      provider.updateOpenTime(openTime);
+      provider.updateCloseTime(closeTime);
+      provider.updateAddress(address);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,14 +61,14 @@ class ReservationScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // 가게 이름
-                            Text(name, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                            Text(provider.reservation.name, style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
                             
                             // 가게 영업시간
                             Row(
                               children: [
                                 Icon(Icons.schedule, size: 20),
                                 SizedBox(width: 10),
-                                Text('${openTime.toString().substring(10, 15)} ~ ${closeTime.toString().substring(10, 15)}'),
+                                Text('${provider.reservation.openTime.toString().substring(10, 15)} ~ ${provider.reservation.closeTime.toString().substring(10, 15)}'),
                               ],
                             ),
                       
@@ -57,7 +77,7 @@ class ReservationScreen extends StatelessWidget {
                               children: [
                                 Icon(Icons.location_on, size: 20),
                                 SizedBox(width: 10),
-                                Text(address),
+                                Text(provider.reservation.address),
                               ],
                             ),
                             SizedBox(height: 30),
@@ -77,6 +97,7 @@ class ReservationScreen extends StatelessWidget {
                             SizedBox(
                               width: double.infinity,
                               height: 150,
+                              // 약간의 딜레이를 주면서 시작/종료 시간을 List로 만들 수 있게 함
                               child: TimeSlotScreen(),
                             ),
                             SizedBox(height: 20),
