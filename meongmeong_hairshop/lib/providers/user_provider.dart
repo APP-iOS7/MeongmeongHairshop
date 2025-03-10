@@ -2,13 +2,14 @@ import 'package:flutter/foundation.dart';
 import '../models/user.dart';
 
 class UserProvider with ChangeNotifier {
-  User _user = User(email: '', password: '', username: '', phoneNumber: '');
+  final User _user = User(email: '', username: '', phoneNumber: '');
 
+  String _password = '';
   String _confirmPassword = '';
   bool _passwordMatch = true;
 
   User get user => _user;
-  String get confirmPassword => _confirmPassword;
+  String get password => _password;
   bool get passwordMatch => _passwordMatch;
 
   void updateEmail(String email) {
@@ -17,24 +18,15 @@ class UserProvider with ChangeNotifier {
   }
 
   void updatePassword(String password) {
-    _user.password = password;
+    _password = password;
     _checkPasswordMatch(password, _confirmPassword);
     notifyListeners();
   }
 
   void updateConfirmPassword(String confirmPassword) {
     _confirmPassword = confirmPassword;
-    _checkPasswordMatch(_user.password, confirmPassword);
+    _checkPasswordMatch(_password, confirmPassword);
     notifyListeners();
-  }
-
-  // 비밀번호가 일치하는지 확인하는 함수
-  void _checkPasswordMatch(String password, String confirmPassword) {
-    if (password == confirmPassword) {
-      _passwordMatch = true;
-    } else {
-      _passwordMatch = false;
-    }
   }
 
   void updateUsername(String username) {
@@ -45,5 +37,14 @@ class UserProvider with ChangeNotifier {
   void updatePhoneNumber(String phoneNumber) {
     _user.phoneNumber = phoneNumber;
     notifyListeners();
+  }
+
+  // 비밀번호가 일치하는지 확인하는 함수
+  void _checkPasswordMatch(String password, String confirmPassword) {
+    if (password == confirmPassword) {
+      _passwordMatch = true;
+    } else {
+      _passwordMatch = false;
+    }
   }
 }
