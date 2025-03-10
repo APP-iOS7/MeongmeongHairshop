@@ -12,7 +12,7 @@ class Pet {
   });
 
   Map<String, dynamic> toFirestore() {
-    return {'name': name, 'breed': breed, 'ageMonths': ageMonths};
+    return {'id': id, 'name': name, 'breed': breed, 'ageMonths': ageMonths};
   }
 
   factory Pet.fromFirestore(Map<String, dynamic> json, String documentId) {
@@ -20,7 +20,7 @@ class Pet {
       id: documentId,
       name: json['name'],
       breed: json['breed'],
-      ageMonths: (json['ageMonths'] as num).toInt(),
+      ageMonths: (json['ageMonths']),
     );
   }
 }

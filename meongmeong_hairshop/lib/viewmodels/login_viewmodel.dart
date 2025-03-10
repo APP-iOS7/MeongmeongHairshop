@@ -31,14 +31,12 @@ Future<void> signOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
 
     if (context.mounted) {
-      // context가 여전히 유효한지 확인
       Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
     }
   } catch (e) {
     debugPrint('로그아웃 오류: $e');
 
     if (context.mounted) {
-      // context가 여전히 유효한지 확인
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('로그아웃에 실패했습니다.')));
