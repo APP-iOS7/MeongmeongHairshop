@@ -97,7 +97,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                             SizedBox(
                               width: double.infinity,
                               height: 150,
-                              // 약간의 딜레이를 주면서 시작/종료 시간을 List로 만들 수 있게 함
+                              
                               child: TimeSlotScreen(),
                             ),
                             SizedBox(height: 20),
