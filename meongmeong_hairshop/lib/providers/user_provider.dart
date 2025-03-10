@@ -49,7 +49,7 @@ class UserProvider with ChangeNotifier {
    * _isLoading: Bool => 데이터 로드 상태
    * _error: String => "에러메세지"
    */
-  Future<void> loadUserData() async {
+  Future<void> fetchUserfromFirebase() async {
     _isLoading = true;
     _error = null;
     notifyListeners();
@@ -63,7 +63,6 @@ class UserProvider with ChangeNotifier {
         return;
       }
 
-      // ------ 데이터 관련 메서드들은 다른 파일로 따로 뺄 예정------
       final docSnapshot =
           await FirebaseFirestore.instance
               .collection('users')

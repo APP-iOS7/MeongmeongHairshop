@@ -35,6 +35,13 @@ Future<void> signUp(
         .set(user)
         .onError((e, _) => debugPrint("Error writing document: $e"));
 
+    if (petProvider.pets.isNotEmpty) {
+      await petProvider.savePetsToFirestore(credential.user!.uid);
+    }
+
+    // 회원가입 완료 후 펫 데이터 초기화
+    petProvider.resetAll();
+
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text("회원가입 성공! 로그인 페이지로 이동합니다.")));

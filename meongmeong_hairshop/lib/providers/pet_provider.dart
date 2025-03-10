@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import '../models/pet.dart';
 
@@ -6,10 +7,12 @@ class PetProvider with ChangeNotifier {
   Pet _currentPet = Pet(name: '', breed: '', ageMonths: 0);
 
   bool _isPetAgeNum = true;
+  bool _isLoading = false;
 
   List<Pet> get pets => _pets;
   Pet get currentPet => _currentPet; // 사용자가 편집중인 펫 인스턴스를 구분하기 위함
   bool get isPetAgeNum => _isPetAgeNum;
+  bool get isLoading => _isLoading;
 
   void updatePetName(String name) {
     _currentPet.name = name;
@@ -60,5 +63,68 @@ class PetProvider with ChangeNotifier {
       _pets.removeAt(index);
       notifyListeners();
     }
+  }
+
+  Future<void> savePetsToFirestore(String userId) async {
+    try {
+      final userDocRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId);
+      final batch = FirebaseFirestore.instance.batch();
+
+      for (var pet in _pets) {
+        final petDocRef = userDocRef.collection('pets').doc();
+        batch.set(petDocRef, pet.toFirestore());
+      }
+
+      await batch.commit();
+    } catch (e) {
+      debugPrint('Error saving pets to Firestore: $e');
+    }
+  }
+
+  Future<void> fetchPetsFromFirestore(String userId) async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      _pets = [];
+
+      final petsCollection = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('pets')
+          .orderBy('createdAt', descending: false); // 생성 시간순 정렬
+
+      final querySnapshot = await petsCollection.get();
+
+      for (var doc in querySnapshot.docs) {
+        final data = doc.data();
+        _pets.add(
+          Pet(
+            id: doc.id,
+            name: data['name'] ?? '',
+            breed: data['breed'] ?? '',
+            ageMonths: data['ageMonths'] ?? 0,
+          ),
+        );
+      }
+
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      _isLoading = false;
+      print('Error fetching pets from Firestore: $e');
+      notifyListeners();
+      throw e;
+    }
+  }
+
+  // 회원가입 완료 후 모든 상태 리셋
+  void resetAll() {
+    _pets = [];
+    _currentPet = Pet(name: '', breed: '', ageMonths: 0);
+    _isPetAgeNum = true;
+    notifyListeners();
   }
 }
