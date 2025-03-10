@@ -12,7 +12,7 @@ Future<void> signIn(BuildContext context) async {
           email: userProvider.user.email,
           password: userProvider.password,
         );
-    Navigator.pushNamed(context, '/success');
+    Navigator.pushNamedAndRemoveUntil(context, '/success', (route) => false);
     debugPrint('로그인 성공: ${userCredential.user}');
   } catch (e) {
     debugPrint('로그인 실패: ${e.toString()}');
