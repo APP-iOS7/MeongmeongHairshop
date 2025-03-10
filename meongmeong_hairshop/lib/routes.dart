@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'views/login_screen.dart';
+import 'views/shop_list_screen.dart';
 import 'views/signup_pet_screen.dart';
 import 'views/signup_user_screen.dart';
 import 'views/reservation/payment_screen.dart';
@@ -12,6 +13,8 @@ Map<String, Widget Function(BuildContext)> appRoutes = {
   '/login': (context) => LoginScreen(),
   '/signup/user': (context) => SignupUserScreen(),
   '/signup/pet': (context) => SignupPetScreen(),
+  '/success': (context) => ReservationScreen(), //temp
+
   '/reservation': (context) => ReservationScreen(),
   '/payment': (context) => PaymentScreen(),
   '/reservationList': (context) => ReservationListScreen(),

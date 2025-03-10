@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'pet.dart';
-
 class Reservation {
   // 유저 정보(User 만들어야함.)
   // 가게 이름

@@ -1,11 +1,11 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:meongmeong_hairshop/config/app_styles.dart';
-import 'package:meongmeong_hairshop/providers/user_provider.dart';
-import 'package:meongmeong_hairshop/providers/pet_provider.dart';
 import 'package:provider/provider.dart';
-import '../../models/Pet.dart';
+import '../models/user_pet.dart';
+import '../providers/pet_provider.dart';
+import '../providers/user_provider.dart';
 
 class SignupPetScreen extends StatelessWidget {
   SignupPetScreen({super.key});
@@ -76,7 +76,7 @@ class SignupPetScreen extends StatelessWidget {
       child: ListView.builder(
         itemCount: petProvider.pets.length,
         itemBuilder: (context, index) {
-          Pet pet = petProvider.pets[index];
+          UserPet pet = petProvider.pets[index];
           return ListTile(
             title: Text(pet.name),
             subtitle: Text('${pet.breed}, ${pet.ageMonths}개월'),
@@ -142,10 +142,6 @@ class SignupPetScreen extends StatelessWidget {
           _petNameController.clear();
           _petBreedController.clear();
           _petAgeMonthController.clear();
-
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('반려동물이 추가되었습니다')));
         } else {
           ScaffoldMessenger.of(
             context,
@@ -171,7 +167,16 @@ class SignupPetScreen extends StatelessWidget {
             password: userProvider.password,
           );
 
-      // Firestore에 정보 저장 코드 추가해야함
+      // Firestore에 정보 저장
+      var db = FirebaseFirestore.instance;
+
+      final user = userProvider.user.toFirestore();
+
+      await db
+          .collection("users")
+          .doc(credential.user!.uid)
+          .set(user)
+          .onError((e, _) => debugPrint("Error writing document: $e"));
 
       ScaffoldMessenger.of(
         context,
@@ -179,22 +184,13 @@ class SignupPetScreen extends StatelessWidget {
 
       Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
     } on FirebaseAuthException catch (e) {
-      print('회원가입 오류: ${e.code} - ${e.message}');
-
-      String errorMessage = "회원가입에 실패했습니다.";
-      if (e.code == 'weak-password') {
-        errorMessage = '비밀번호가 너무 약합니다.';
-      } else if (e.code == 'email-already-in-use') {
-        errorMessage = '이미 등록된 이메일입니다.';
-      } else if (e.code == 'invalid-email') {
-        errorMessage = '유효하지 않은 이메일 형식입니다.';
-      }
+      debugPrint('회원가입 오류: ${e.code} - ${e.message}');
 
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text(errorMessage)));
+      ).showSnackBar(SnackBar(content: Text('회원가입에 실패했습니다.')));
     } catch (e) {
-      print('예상치 못한 오류: $e');
+      debugPrint('예상치 못한 오류: $e');
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("예상치 못한 오류가 발생했습니다.")));
