@@ -3,10 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:meongmeong_hairshop/providers/reservation_provider.dart';
 import 'package:meongmeong_hairshop/providers/user_provider.dart';
 import 'package:meongmeong_hairshop/viewmodels/reservation_viewmodel.dart';
+import 'package:meongmeong_hairshop/views/home/main_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'payment_list_screen.dart';
-import '../auth/login_screen.dart';
 
 class PaymentScreen extends StatelessWidget {
   PaymentScreen({super.key});
@@ -147,11 +147,10 @@ class PaymentScreen extends StatelessWidget {
                       children: [
                         // userprovider에서 정보를 가져오는 부분
                         Text(reservationProvider.userName),
-                        Text("("),
-                        Text(reservationProvider.reservation.petName),
-                        Text(")"),
+                        Text("(${reservationProvider.reservation.petName})"),
                       ],
                     ),
+                    Text('(${userProvider.user!.phoneNumber})'), 
                     SizedBox(height: 20),
                     
                     Text('결제 수단', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
@@ -167,7 +166,7 @@ class PaymentScreen extends StatelessWidget {
                           reservationProvider.setTotalFee(totalFee);
 
                           if(reservationProvider.reservation.services.isNotEmpty) {
-                            _firestoreService.addReservation(reservationProvider.userName,reservationProvider.reservation.name, reservationProvider.reservation.openTime, reservationProvider.reservation.closeTime, reservationProvider.reservation.address, reservationProvider.reservation.date, reservationProvider.reservation.reservedTime, reservationProvider.reservation.designer, reservationProvider.position,reservationProvider.reservation.services, reservationProvider.reservation.petName, totalFee, reservationProvider.paymentMethod);
+                            _firestoreService.addReservation(reservationProvider.userName,reservationProvider.reservation.name, reservationProvider.reservation.openTime, reservationProvider.reservation.closeTime, reservationProvider.reservation.address, reservationProvider.reservation.date, reservationProvider.reservation.reservedTime, reservationProvider.reservation.designer, reservationProvider.position,reservationProvider.reservation.services, reservationProvider.reservation.petName, totalFee, reservationProvider.paymentMethod, reservationProvider.phoneNumber);
 
                             reservationProvider.allReset();
 
@@ -176,7 +175,7 @@ class PaymentScreen extends StatelessWidget {
                             Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => LoginScreen(),
+                                builder: (context) => MainScreen(),
                               ),
                               (route) => false,
                             );

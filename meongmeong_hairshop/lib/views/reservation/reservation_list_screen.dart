@@ -34,7 +34,7 @@ class _ReservationListScreenState extends State<ReservationListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: 
-        Text('예약 목록'),
+        Text('예약 내역'),
         backgroundColor: Colors.green,
         ),
         

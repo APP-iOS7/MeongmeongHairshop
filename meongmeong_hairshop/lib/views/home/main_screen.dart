@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meongmeong_hairshop/views/reservation/reservation_screen.dart';
 
 import 'home_screen.dart';
 import 'map_screen.dart';
@@ -14,7 +15,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screens = [HomeScreen(), MapScreen(), MyPageScreen()];
+  final List<Widget> _screens = [HomeScreen(), ReservationScreen(), MyPageScreen()];
 
   void _onItemTapped(int index) {
     setState(() {

@@ -96,14 +96,14 @@ class _ReservationDetailScreenState extends State<ReservationDetailScreen> {
                       Row(
                         children: [
                           Text('보호자   ', style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text('${snapshot.data!['userName']} (${snapshot.data!['petName']})'),
+                          Text('${snapshot.data!['userName']}(${snapshot.data!['petName']})'),
                         ],
                       ),
                       SizedBox(height: 10),
                       Row(
                         children: [
                           Text('금액   ', style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text('${snapshot.data!['totalFee']} 원 (${snapshot.data!['paymentMethod']})'),
+                          Text('${snapshot.data!['totalFee']}원 (${snapshot.data!['paymentMethod']})'),
                         ],
                       ),
                       SizedBox(height: 30),

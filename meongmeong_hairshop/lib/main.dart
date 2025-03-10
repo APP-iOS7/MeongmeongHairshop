@@ -24,12 +24,8 @@ void main() async {
   await Firebase.initializeApp();
 
   // 에뮬레이터 사용
-  FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
-  FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
-
-  //에뮬레이터 사용
-  FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
-  FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  // FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  // FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
 
   runApp(
     MultiProvider(
