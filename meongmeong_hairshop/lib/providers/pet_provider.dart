@@ -1,14 +1,14 @@
 import 'package:flutter/foundation.dart';
-import '../models/user_pet.dart';
+import '../models/pet.dart';
 
 class PetProvider with ChangeNotifier {
-  final List<UserPet> _pets = [];
-  UserPet _currentPet = UserPet(name: '', breed: '', ageMonths: 0);
+  late List<Pet> _pets;
+  Pet _currentPet = Pet(name: '', breed: '', ageMonths: 0);
 
   bool _isPetAgeNum = true;
 
-  List<UserPet> get pets => _pets;
-  UserPet get currentPet => _currentPet; // 사용자가 편집중인 펫 인스턴스를 구분하기 위함
+  List<Pet> get pets => _pets;
+  Pet get currentPet => _currentPet; // 사용자가 편집중인 펫 인스턴스를 구분하기 위함
   bool get isPetAgeNum => _isPetAgeNum;
 
   void updatePetName(String name) {
@@ -43,14 +43,14 @@ class PetProvider with ChangeNotifier {
         _currentPet.breed.isNotEmpty &&
         _currentPet.ageMonths > 0) {
       _pets.add(
-        UserPet(
+        Pet(
           name: _currentPet.name,
           breed: _currentPet.breed,
           ageMonths: _currentPet.ageMonths,
         ),
       );
 
-      _currentPet = UserPet(name: '', breed: '', ageMonths: 0);
+      _currentPet = Pet(name: '', breed: '', ageMonths: 0);
       notifyListeners();
     }
   }

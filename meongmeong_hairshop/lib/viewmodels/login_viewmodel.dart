@@ -12,7 +12,7 @@ Future<void> signIn(BuildContext context, String email, String password) async {
     await userProvider.loadUserData();
 
     if (context.mounted) {
-      Navigator.pushNamed(context, '/success');
+      Navigator.pushNamedAndRemoveUntil(context, '/success', (route) => false);
     }
 
     debugPrint('로그인 성공: ${userCredential.user}');

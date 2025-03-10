@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meongmeong_hairshop/config/app_styles.dart';
 import 'package:provider/provider.dart';
-import '../../models/user_pet.dart';
+import '../../models/pet.dart';
 import '../../providers/pet_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../viewmodels/signup_viewmodel.dart';
@@ -89,7 +89,7 @@ class _SignupPetScreenState extends State<SignupPetScreen> {
       child: ListView.builder(
         itemCount: petProvider.pets.length,
         itemBuilder: (context, index) {
-          UserPet pet = petProvider.pets[index];
+          Pet pet = petProvider.pets[index];
           return ListTile(
             title: Text(pet.name),
             subtitle: Text('${pet.breed}, ${pet.ageMonths}개월'),

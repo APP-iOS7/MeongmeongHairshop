@@ -175,14 +175,11 @@ class _SignupUserScreenState extends State<SignupUserScreen> {
   }
 
   bool validateUserInfo(BuildContext context, GlobalKey<FormState> formKey) {
-    // 폼 유효성 검사
     if (formKey.currentState?.validate() ?? false) {
-      // 로컬 상태에서 비밀번호 일치 여부 확인
       if (!_passwordMatch) {
         return false;
       }
 
-      // UserProvider 업데이트 (비밀번호 제외)
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       userProvider.updateEmail(_emailController.text);
       userProvider.updateUsername(_userNameController.text);
