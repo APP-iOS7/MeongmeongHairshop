@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/animation.dart';
 
 import '../viewmodels/map_view_model.dart';
+import '../wigets/naver_map_widget.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -191,6 +192,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                               id: salon.title,
                               position: NLatLng(salon.mapy, salon.mapx),
                             );
+
                             _mapController.addOverlay(marker);
 
                             // 마커 클릭 시 모달 표시

@@ -1,3 +1,4 @@
+// providers/map_provider.dart
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -8,55 +9,38 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import '../models/salon.dart';
 
-class MapViewModel with ChangeNotifier {
+class MapProvider with ChangeNotifier {
   late NaverMapController mapController;
-  // 살롱 목록
   List<Salon> _salons = [];
   List<Salon> get salons => _salons;
 
-  // 로딩 상태
   bool _isLoading = false;
   bool get isLoading => _isLoading;
-  
-  bool _suppressApiOnCameraIdle = false;
-  bool get suppressApiOnCameraIdle => _suppressApiOnCameraIdle;
 
-  // 현재 위치
   Position? currentPosition;
 
-  // 초기화 시, 현재 위치 가져오기
+  /// 초기화 시 현재 위치를 가져옵니다.
   void init() {
     fetchCurrentPosition();
   }
 
   /// 네이버 로컬 API 호출하여 살롱 검색
-  Future<List<Salon>> fetchSalons(
-    String query,
-    NCameraPosition position,
-  ) async {
+  Future<List<Salon>> fetchSalons(String query, NCameraPosition position) async {
     List<Placemark> placemarks = await placemarkFromCoordinates(
       position.target.latitude,
       position.target.longitude,
     );
-    String location =
-        placemarks.isNotEmpty ? placemarks.first.locality ?? '' : '';
+    String location = placemarks.isNotEmpty ? placemarks.first.locality ?? '' : '';
 
-    // if (location.isEmpty) {
-    //   print("주소를 찾을 수 없습니다.");
-    //   return [];
-    // }
-    // 위치 기반 검색을 위해 지역명 포함
     http.Response response = await fetchPlaceWithLocation(query, location);
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
-      print(data['items']);
-
-      if (data['items'].isEmpty || data['items'] == null) {
-        http.Response response = await fetchPlaceWithLocation(query);
+      if (data['items'] == null || data['items'].isEmpty) {
+        // 지역명을 포함한 검색 결과가 없으면 지역정보 없이 재요청
+        response = await fetchPlaceWithLocation(query);
         if (response.statusCode == 200) {
           data = json.decode(response.body);
-          print(data['items']);
         } else {
           print('API 호출 실패: ${response.statusCode}');
           return [];
@@ -64,12 +48,11 @@ class MapViewModel with ChangeNotifier {
       }
       final List<dynamic> places = data['items'] ?? [];
 
-      // Salon 모델 리스트로 변환
       try {
         return places.map((place) {
           return Salon(
-            title:
-                place['title']?.replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), '') ??
+            title: place['title']
+                    ?.replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), '') ??
                 '',
             link: place['link'] ?? '',
             category: place['category'] ?? '',
@@ -77,6 +60,7 @@ class MapViewModel with ChangeNotifier {
             telephone: place['telephone'] ?? '',
             address: place['address'] ?? '',
             roadAddress: place['roadAddress'] ?? '',
+            // mapx, mapy 값은 API 반환값의 단위를 고려하여 변환
             mapx: (double.tryParse(place['mapx'] ?? '') ?? 0) / 10000000,
             mapy: (double.tryParse(place['mapy'] ?? '') ?? 0) / 10000000,
           );
@@ -93,13 +77,10 @@ class MapViewModel with ChangeNotifier {
 
   Future<http.Response> fetchPlaceWithLocation(String query, [String location = '']) async {
     final encodedQuery = Uri.encodeComponent('$query $location');
-
     final url = Uri.parse(
       'https://openapi.naver.com/v1/search/local.json?query=$encodedQuery&display=5',
     );
-
     print('API 요청: $url');
-
     final response = await http.get(
       url,
       headers: {
@@ -116,13 +97,11 @@ class MapViewModel with ChangeNotifier {
     notifyListeners();
 
     try {
-      // 네이버 API 호출
       final salonData = await fetchSalons(
         query,
         mapController.nowCameraPosition,
       );
       _salons = salonData;
-      notifyListeners();
       print('펫미용실 리스트: $_salons');
     } catch (e) {
       print('검색 오류: $e');
@@ -132,6 +111,7 @@ class MapViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  /// 링크 열기
   Future<void> openLink(Salon salon) async {
     final Uri url = Uri.parse(salon.link);
     if (await canLaunchUrl(url)) {
@@ -145,11 +125,10 @@ class MapViewModel with ChangeNotifier {
   void fetchCurrentPosition() {
     Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((position) {
-          currentPosition = position;
-          notifyListeners();
-        })
-        .catchError((e) {
-          print('위치 가져오기 오류: $e');
-        });
+      currentPosition = position;
+      notifyListeners();
+    }).catchError((e) {
+      print('위치 가져오기 오류: $e');
+    });
   }
 }
